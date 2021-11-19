@@ -1,0 +1,54 @@
+
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  GOV.UK Prototype Kit
+{% endblock %}
+
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">
+        Economic infrastructure projects
+      </h1>
+      <h2 class="govuk-heading-m">Show benchmarking data submiited by <span class="results-count">0</span> projects</h2>
+    </div>
+  </div>
+
+  <hr class="govuk-section-break govuk-section-break--visible" style="margin-bottom: 15px;">
+
+  <div class="govuk-grid-row">
+
+  <div class="govuk-grid-column-one-third">
+    <div class="govuk-form-group">
+      <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+          <h1 class="govuk-fieldset__heading">
+            Which types of waste do you transport?
+          </h1>
+        </legend>
+        <div id="waste-hint" class="govuk-hint">
+          Select all that apply.
+        </div>
+        <div class="govuk-checkboxes" data-module="govuk-checkboxes"></div>
+      </fieldset>
+    </div>
+  </div>
+
+  <div class="govuk-grid-column-two-thirds">
+  
+  <div class="results">
+  
+  <ul class="results-list">
+    
+  </ul>
+
+  </div>
+  
+
+  </div>
+ 
+  </div>
+
+{% endblock %}

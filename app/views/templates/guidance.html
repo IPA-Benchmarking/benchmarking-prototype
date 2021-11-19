@@ -1,0 +1,75 @@
+
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  GOV.UK Prototype Kit
+{% endblock %}
+
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">
+        Guidance template
+      </h1>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+
+   
+    <div class=" govuk-grid-column-full">
+      <h1 class="govuk-heading-xl">Guidance template: IPA</h1>
+
+      <ul class="govuk-list dash-list">
+        <li>Overview</li>
+        <li><a class="govuk-link" href="who-can-apply">Who can apply</a></li>
+        <li><a class="govuk-link" href="how-it-works">How it works</a></li>
+        <li><a class="govuk-link" href="what-you-cannot-do">What you cannot do</a></li>
+        <li><a class="govuk-link" href="paying-back-the-loan">What you need to pay</a></li>
+        <li><a class="govuk-link" href="how-to-apply">How to apply</a></li>
+      </ul>
+
+    </div>
+      <div class="govuk-grid-column-two-thirds">
+
+      <hr class="govuk-section-break govuk-section-break--visible" style="margin-bottom: 15px;">
+
+      <h2 class="govuk-heading-l">Overview</h2>
+
+    
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vitae nunc ac purus commodo convallis nec vel quam. Aenean tempor nulla sed ipsum feugiat mollis</p> 
+         
+      <p>Quisque gravida velit tristique massa efficitur facilisis:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>is based on a percentage of what the property is worth (its market value) </li>
+        <li>goes up and down with the market value of the property</li>
+     </ul>
+        
+    <p>ust be:</p> 
+      <ul class="govuk-list govuk-list--bullet">
+        <li>a new build. This is a newly built home that has not been lived in before </li>
+        <li>from a registered Help to Buy house builder</li>
+     </ul>
+        
+      <p>Homebuyers can use an equity loan to buy a home in England (there are different schemes for <a href="#">Wales</a> and <a href="#">Scotland</a>).</p> 
+      
+     <p> You need to live in the property you buy with an equity loan. The home cannot be used for renting.</p>   
+        
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+        <!-- The Related items component is not part of GOV.UK Frontend but will be styled if used in the Prototype Kit -->
+        <aside class="app-related-items" role="complementary">
+  
+          <h2 class="govuk-heading-m">Related content</h2>
+          <ul class="govuk-list">
+            <li><a href="#" class="govuk-link">Return to an equity loan application </a></li>
+            <li><a href="https://htb-alpha-uj3.herokuapp.com/redemption/uj4/iteration-2/application/application-overview" class="govuk-link">How to pay back your  loan</a></li>
+            <li><a href="https://www.helptobuy.gov.uk/equity-loan/find-helptobuy-agent/">Find a home you can buy with an equity loan</a></li>
+          </ul>
+        </aside>
+      </div>
+  </div>
+
+{% endblock %}
