@@ -9,7 +9,7 @@ const evn = window.location.host;
 const ipaConfig = {
   url: evn.search('localhost') > -1 ? 'http://localhost:4041/api' : 'https://ipamockapi.herokuapp.com/api'
 }
-
+console.log(evn.search('localhost'));
 console.log('url', ipaConfig.url);
 
 const checkboxTpl = (items, i) => {
