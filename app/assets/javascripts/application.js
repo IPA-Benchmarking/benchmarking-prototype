@@ -7,7 +7,7 @@ if (window.console && window.console.info) {
 
 const evn = window.location.host; 
 const ipaConfig = {
-  url: evn.search('localhost') >= -1 ? 'http://localhost:4041/api' : 'https://ipamockapi.herokuapp.com/api'
+  url: evn.search('localhost') > -1 ? 'http://localhost:4041/api' : 'https://ipamockapi.herokuapp.com/api'
 }
 
 console.log('url', ipaConfig.url);
