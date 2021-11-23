@@ -4,18 +4,30 @@
 if (window.console && window.console.info) {
   window.console.info('GOV.UK Prototype Kit - do not use for production')
 }
+// window.history.replaceState({}, document.title, "/");
 
-const evn = window.location.host; 
+if (window.location.search && $('.results').length) {
+  window.history.replaceState({}, document.title, window.location.pathname);
+}
+
+const evn = window.location.host;
+const $checkboxesWrapper = $('.govuk-checkboxes');
 const ipaConfig = {
   url: evn.search('localhost') > -1 ? 'http://localhost:4041/api' : 'https://ipamockapi.herokuapp.com/api'
 }
-console.log(evn.search('localhost'));
-console.log('url', ipaConfig.url);
+const paramArr = [];
+const searchParams = new URLSearchParams(window.location.search);
+const searchDataArr = [];
+let params = [];
+let newArr = [];
+
 
 const checkboxTpl = (items, i) => {
+  const id = camelize(items[i].text);
+
   return `<div class="govuk-checkboxes" data-module="govuk-checkboxes">
   <div class="govuk-checkboxes__item">
-    <input class="govuk-checkboxes__input" id="${items[i].text}" name="${items[i].text}" type="checkbox" value="${items[i].value}">
+    <input class="govuk-checkboxes__input" id="${id}" name="assetClass" type="checkbox" value="${items[i].value}">
     <label class="govuk-label govuk-checkboxes__label" for="waste">
       ${items[i].text}
     </label>
@@ -24,17 +36,20 @@ const checkboxTpl = (items, i) => {
 
 const resultsListItemTpl = (results, i) => {
   return `<li class="results-item">
-  <p><a href="#">${results[i].ProjectName}</a></p>
+  <p class="list-item-title"><a href="#">${results[i].ProjectName}</a></p>
   <p>Construction address or local authority Project end date: ${results[i].ProjectEndDate}</p>
   <p>Any other information that might be interested by users can be added here.</p>
   <button class="govuk-button govuk-button--secondary" data-module="govuk-button">Add to benchmark</button>
   </li>`
 }
 
+const camelize = (str) => {
+  return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
+    return index === 0 ? word.toLowerCase() : word.toUpperCase();
+  }).replace(/\s+/g, '');
+}
 
-
-function getCheckboxData() {
-  const $checkboxesWrapper = $('.govuk-checkboxes');
+function getCheckboxOpts() {
   $.getJSON( `${ipaConfig.url}/projectType`, function( data ) {
     const items = [];
     data.map((item, index) => {
@@ -46,26 +61,78 @@ function getCheckboxData() {
 
 function getProjectData() {
   const $resultsListWrapper = $('.results-list');
+  const $countWrapper = $('.results-count');
   $.getJSON( `${ipaConfig.url}/projects`, function( data ) {
     const items = [];
-
-    console.log('data', data);
-
-    data.map((item, index) => {
-      items.push(item);
-      $resultsListWrapper.append(resultsListItemTpl(items, index));
-    })
-
-    $('.results-count').text(items.length);
-
+ 
+    if (data.length) {
+      data.map((item, index) => {
+        items.push(item);
+        $resultsListWrapper.append(resultsListItemTpl(items, index));
+      });
+    }
+    
+    searchDataArr.push(...data);
+    $countWrapper.text(items.length);
   });
 }
 
+function onFilter(val) {
+  const data = searchDataArr;
+  // const params = searchParams.get('projectTypeID'); //params.getAll('foo'))
+  // const paramsArr = parseInt(params.split(","), 10);
+  
+  newArr.push({ 'projectTypeID': val });
+  let myfilter = newArr;
+  console.log('newArr', newArr);
+
+  const myArrayFiltered = data.filter( el => {
+    console.log('el', el.projectTypeID);
+    return myfilter.some( f => {
+      return f.projectTypeID === el.projectTypeID && f.projectTypeID === el.projectTypeID;
+    });
+  });
+
+  console.log('myArrayFiltered', myArrayFiltered)
+}
+
+function checkboxes() {
+  $checkboxesWrapper.on('click', 'input', function () {
+    const checkBox = $(this);
+    const value = checkBox.val();
+    
+    updateParams(checkBox, value);
+    onFilter(value);
+
+    
+  });
+}
+
+function updateParams(el, value) {
+  const index = paramArr.indexOf(value);
+  if (el.is(':checked')) {
+    paramArr.push(value); 
+  } else {
+    if (index > -1) {
+      paramArr.splice(index, 1);
+    }
+  }
+  updateSearchParams(paramArr)
+}
+
+function updateSearchParams(arr) {
+    const pathname = window.location.pathname;
+    let params = '';
+    
+    searchParams.set("projectTypeID", arr);
+    params = searchParams.toString();
+    window.history.pushState(null, null, `${pathname}?${params}`);
+}
 
 $(document).ready(function () {
   window.GOVUKFrontend.initAll()
   
-  getCheckboxData();
+  getCheckboxOpts();
   getProjectData();
-
+  checkboxes();
 })
