@@ -13,6 +13,34 @@
         Economic infrastructure projects
       </h1>
     </div>
+    
+
+    <div class="govuk-grid-column-two-thirds">
+        <h2 class="govuk-heading-l">Sign in</h2>
+        {% from "govuk/components/input/macro.njk" import govukInput %}
+
+        {{ govukInput({
+        label: {
+            text: "Email",
+            classes: "govuk-label--l",
+            isPageHeading: true
+        },
+        id: "email",
+        name: "email",
+        type: "email"
+        }) }}
+
+        {{ govukInput({
+        label: {
+            text: "Password",
+            classes: "govuk-label--l",
+            isPageHeading: true
+        },
+        id: "password",
+        name: "password",
+        type: "password"
+        }) }}
+    </div>
 </div>
 
 {% endblock %}
