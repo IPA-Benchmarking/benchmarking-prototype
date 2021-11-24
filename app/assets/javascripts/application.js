@@ -4,7 +4,6 @@
 if (window.console && window.console.info) {
   window.console.info('GOV.UK Prototype Kit - do not use for production')
 }
-// window.history.replaceState({}, document.title, "/");
 
 if (window.location.search && $('.results').length) {
   window.history.replaceState({}, document.title, window.location.pathname);

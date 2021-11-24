@@ -47,9 +47,12 @@
     serviceUrl: "/",
     containerClasses: "govuk-width-container"
   }) }}
+  
 {% endblock %}
 
+
 {% set mainClasses = mainClasses | default("govuk-main-wrapper--auto-spacing") %}
+
 
 {% if useAutoStoreData %}
   {% block footer %}

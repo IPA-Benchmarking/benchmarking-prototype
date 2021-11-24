@@ -1,5 +1,14 @@
+
+
+.bold-figures { 
+    color:  #28A197;
+    font-size: 80px;
+    font-weight: bold;
+}
+
 .results-item {
     list-style: none;
+    
 }
 
 .govuk-accordion__section {
@@ -20,9 +29,17 @@
     }
 }
 
-// .inline-block {
-//     display: inline-block;
-// }
+.figures {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .figures-data {
+        .govuk-heading-s {
+            margin-bottom: 10px;
+        }
+    }
+}
 
 .sort {
     display: flex; 
@@ -32,6 +49,14 @@
     label {
         padding-top: 8px;
         padding-right: 10px;
+    }
+}
+
+.no-bullet {
+    list-style: none;
+    
+    li {
+        margin-bottom:10px;
     }
 }
 
