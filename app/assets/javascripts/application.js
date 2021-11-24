@@ -10,9 +10,14 @@ if (window.location.search && $('.results').length) {
 }
 
 const evn = window.location.host;
+// const ipaConfig = {
+//   url: evn.search('localhost') > -1 ? 'http://localhost:4041/api' : 'https://ipamockapi.herokuapp.com/api'
+// }
 const ipaConfig = {
-  url: evn.search('localhost') > -1 ? 'http://localhost:4041/api' : 'https://ipamockapi.herokuapp.com/api'
+  url: 'https://ipamockapi.herokuapp.com/api'
 }
+
+console.log('ipaConfig', evn.search('localhost'));
 const paramArr = [];
 const searchParams = new URLSearchParams(window.location.search);
 const searchDataArr = [];
@@ -55,7 +60,8 @@ function getCheckboxOpts() {
       items.push({text: item.type, value: item.id });
       $checkboxesWrapper.append(checkboxTpl(items, index));
     })
-  });
+  })
+  .fail(function() { alert("error"); });
 }
 
 function getProjectData() {
