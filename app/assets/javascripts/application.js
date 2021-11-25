@@ -61,7 +61,6 @@ function getCheckboxOpts() {
       $checkboxesWrapper.append(checkboxTpl(items, index));
     })
   })
-  .fail(function() { alert("error"); });
 }
 
 function getProjectData() {
