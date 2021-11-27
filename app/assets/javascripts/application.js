@@ -28,10 +28,10 @@ const $checkboxesWrapper = $('.govuk-checkboxes');
 const $countWrapper = $('.results-count');
 
 const checkboxTpl = (items, i) => {
-  const id = camelize(items[i].text);
+  const inputId = _.camelCase(items[i].text);
   return `<div class="govuk-checkboxes" data-module="govuk-checkboxes">
   <div class="govuk-checkboxes__item">
-    <input class="govuk-checkboxes__input" id="${id}" name="projectTypeID" type="checkbox" value="${items[i].value}">
+    <input class="govuk-checkboxes__input" id="${inputId}" name="projectTypeID" type="checkbox" value="${items[i].value}">
     <label class="govuk-label govuk-checkboxes__label" for="waste">
       ${items[i].text}
     </label>
@@ -43,7 +43,7 @@ const resultsListItemTpl = (results, i) => {
   <p class="list-item-title"><a href="#">${results[i].ProjectName}</a></p>
   <p>Construction address or local authority Project end date: ${results[i].ProjectEndDate}</p>
   <p>Any other information that might be interested by users can be added here.</p>
-  <button class="govuk-button govuk-button--secondary" data-module="govuk-button">Add to benchmark</button>
+  <button class="govuk-button govuk-button--secondary" data-module="govuk-button">Add to compare</button>
   </li>`
 }
 
@@ -56,6 +56,7 @@ const camelize = (str) => {
 function getCheckboxOpts() {
   $.getJSON( `${ipaConfig.url}/projectType`, function( data ) {
     const items = [];
+
     data.map((item, index) => {
       items.push({text: item.type, value: item.id });
       $checkboxesWrapper.append(checkboxTpl(items, index));
