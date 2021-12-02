@@ -89,6 +89,7 @@
 .no-border {
     .box {
         border: none;
+        padding: 0;
     }
 }
 
@@ -105,6 +106,8 @@
 
 .no-bullet {
     list-style: none;
+    margin-left: 0;
+    padding-left: 0;
     
     li {
         margin-bottom:10px;
@@ -136,4 +139,22 @@
 
 .blue {
     border: 2px solid #1D70B8;
+}
+
+.blue-alt{
+    border: 1px solid #1D70B8;
+}
+
+.govuk-radios{
+    .sectors {
+        margin-bottom: 50px;
+    }
+}
+
+.hidden {
+    visibility: hidden;
+
+    &:focus {
+        visibility: visible;
+    }
 }

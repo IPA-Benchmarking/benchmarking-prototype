@@ -1,0 +1,41 @@
+[
+  {
+    "Economic": [
+      {
+        "id": "1",
+        "type": "Foot Bridge",
+        "sector": "Economical"
+      },
+      {
+        "id": "3",
+        "type": "Tunnel",
+        "sector": "Social"
+      },
+      {
+        "id": "2",
+        "type": "Embankment",
+        "sector": "Social"
+      }
+    ],
+    "Social": [
+      {
+        "id": "5",
+        "type": "Prison",
+        "sector": "Social"
+      },
+      {
+        "id": "4",
+        "type": "Hospital",
+        "sector": "Economical"
+      }
+    ],
+    "Information and technology": [
+      {
+        "id": "6",
+        "type": "IT Project",
+        "sector": "IT"
+      }
+    ]
+  }
+]
+

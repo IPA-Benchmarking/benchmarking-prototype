@@ -16,15 +16,12 @@ const ipaConfig = {
 
 console.log(ipaConfig.url)
 
-// const searchParams = new URLSearchParams(window.location.search)
-const searchDataArr = []
 const projectsDataModel = []
 const paramArr = []
-// let params = []
-const newArr = []
 const $resultsListWrapper = $('.results-list')
 const $checkboxesWrapper = $('.govuk-checkboxes')
 const $countWrapper = $('.results-count')
+const $assetSectionWrapper = $('.govuk-radios')
 
 const checkboxTpl = (items, i) => {
   const inputId = _.camelCase(items[i].text)
@@ -35,6 +32,23 @@ const checkboxTpl = (items, i) => {
       ${items[i].text}
     </label>
   </div>`
+}
+
+const assetGroups = (section) => {
+  const name = _.startCase(_.toLower(section))
+  const id = _.camelCase(section)
+  return `<section id="${id}" class="${id} sectors"><h3 class="govuk-heading-m">${name}</h3></section>`
+}
+
+const radiobuttonTpl = (items, i) => {
+  const type = _.camelCase(items.type)
+  return `    
+                <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="${type}" name="${items.sector}" type="radio" value="${items.id}">
+                            <label class="govuk-label govuk-radios__label" for="${type}">
+                                   ${items.type}
+                            </label>
+                        </div>`
 }
 
 const resultsListItemTpl = (results, i) => {
@@ -49,6 +63,7 @@ const resultsListItemTpl = (results, i) => {
 function getCheckboxOpts () {
   $.getJSON(`${ipaConfig.url}/projectType`, function (data) {
     const items = []
+
     if (data.length) {
       data.map((item, index) => {
         items.push({ text: item.type, value: item.id })
@@ -58,12 +73,29 @@ function getCheckboxOpts () {
   })
 }
 
+function getAssetOpts () {
+  $.getJSON(`${ipaConfig.url}/projectType`, function (data) {
+    if (data.length) {
+      //const groupSectors = _.mapValues(_.groupBy(data, 'sector'), sectorList => sectorList.map(sector => _.omit(sector, 'sector')))
+      const groupSectors = _.mapValues(_.groupBy(data, 'sector'))
+      console.log('groupSectors', groupSectors)
+
+      Object.keys(groupSectors).forEach(function (key, index) {
+        const sectorArr = groupSectors[key]
+        const keyToCamelcase = _.camelCase(key)
+        $assetSectionWrapper.append(assetGroups(key))
+        sectorArr.forEach(function (arr, i) {
+          $('#' + keyToCamelcase).append(radiobuttonTpl(arr, i))
+        })
+      })
+    }
+  })
+}
+
 function getProjectData () {
   const params = { page: 1, limit: 10 }
 
   $.get(`${ipaConfig.url}/projects`, params, function (data) {
-
-    // console.log('data', data)
     const dataModel = data
     const items = []
     const countTpl = `${items.length}/${dataModel.length}`
@@ -79,6 +111,7 @@ function getProjectData () {
     $countWrapper.text(countTpl)
   })
 }
+
 function updateFilteredList (arrayFiltered) {
   // console.log('arrayFiltered', arrayFiltered)
 
@@ -146,6 +179,7 @@ $(document).ready(function () {
   window.GOVUKFrontend.initAll()
 
   getCheckboxOpts()
+  getAssetOpts()
   getProjectData()
   checkboxes()
 })
