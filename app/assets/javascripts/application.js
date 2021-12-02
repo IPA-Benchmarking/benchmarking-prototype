@@ -6,29 +6,28 @@ if (window.console && window.console.info) {
 }
 
 if (window.location.search && $('.results').length) {
-  window.history.replaceState({}, document.title, window.location.pathname);
+  window.history.replaceState({}, document.title, window.location.pathname)
 }
 
-const evn = window.location.host;
-// const ipaConfig = {
-//   url: evn.search('localhost') > -1 ? 'http://localhost:4041/api' : 'https://ipamockapi.herokuapp.com/api'
-// }
+const evn = window.location.host
 const ipaConfig = {
-  url: 'https://ipamockapi.herokuapp.com/api'
+  url: evn.search('localhost') > -1 ? 'http://localhost:4041/api' : 'https://ipamockapi.herokuapp.com/api'
 }
 
-console.log('ipaConfig', evn.search('localhost'));
-const paramArr = [];
-const searchParams = new URLSearchParams(window.location.search);
-const searchDataArr = [];
-let params = [];
-let newArr = [];
-const $resultsListWrapper = $('.results-list');
-const $checkboxesWrapper = $('.govuk-checkboxes');
-const $countWrapper = $('.results-count');
+console.log(ipaConfig.url)
+
+// const searchParams = new URLSearchParams(window.location.search)
+const searchDataArr = []
+const projectsDataModel = []
+const paramArr = []
+// let params = []
+const newArr = []
+const $resultsListWrapper = $('.results-list')
+const $checkboxesWrapper = $('.govuk-checkboxes')
+const $countWrapper = $('.results-count')
 
 const checkboxTpl = (items, i) => {
-  const inputId = _.camelCase(items[i].text);
+  const inputId = _.camelCase(items[i].text)
   return `<div class="govuk-checkboxes" data-module="govuk-checkboxes">
   <div class="govuk-checkboxes__item">
     <input class="govuk-checkboxes__input" id="${inputId}" name="projectTypeID" type="checkbox" value="${items[i].value}">
@@ -40,118 +39,113 @@ const checkboxTpl = (items, i) => {
 
 const resultsListItemTpl = (results, i) => {
   return `<li class="results-item">
-  <p class="list-item-title"><a href="#">${results[i].ProjectName}</a></p>
-  <p>Construction address or local authority Project end date: ${results[i].ProjectEndDate}</p>
+  <p class="list-item-title"><a href="#">${results[i].projectName}</a></p>
+  <p>Construction address or local authority Project end date: ${results[i].projectEndDate}</p>
   <p>Any other information that might be interested by users can be added here.</p>
   <button class="govuk-button govuk-button--secondary" data-module="govuk-button">Add to compare</button>
   </li>`
 }
 
-const camelize = (str) => {
-  return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
-    return index === 0 ? word.toLowerCase() : word.toUpperCase();
-  }).replace(/\s+/g, '');
-}
-
-function getCheckboxOpts() {
-  $.getJSON( `${ipaConfig.url}/projectType`, function( data ) {
-    const items = [];
-
-    data.map((item, index) => {
-      items.push({text: item.type, value: item.id });
-      $checkboxesWrapper.append(checkboxTpl(items, index));
-    })
+function getCheckboxOpts () {
+  $.getJSON(`${ipaConfig.url}/projectType`, function (data) {
+    const items = []
+    if (data.length) {
+      data.map((item, index) => {
+        items.push({ text: item.type, value: item.id })
+        $checkboxesWrapper.append(checkboxTpl(items, index))
+      })
+    }
   })
 }
 
-function getProjectData() {
-  $.getJSON( `${ipaConfig.url}/projects`, function( data ) {
-    const items = [];
- 
-    if (data.length) {
-      data.map((item, index) => {
-        items.push(item);
-        $resultsListWrapper.append(resultsListItemTpl(items, index));
-      });
-    }
-    
-    searchDataArr.push(...data);
-    $countWrapper.text(items.length);
-  });
-}
+function getProjectData () {
+  const params = { page: 1, limit: 10 }
 
-function onFilter(val, prop) {
-  const data = searchDataArr;
-  console.log('data', data);
-  // const params = searchParams.get('projectTypeID'); //params.getAll('foo'))
-  // const paramsArr = parseInt(params.split(","), 10);
-  newArr.push({ 'projectTypeID': val });
-  let myfilter = newArr;
-  // const arrayFiltered = [];
-  console.log('newArr', newArr);
+  $.get(`${ipaConfig.url}/projects`, params, function (data) {
 
-  const arrayFiltered = data.filter( el => {
-    return myfilter.some( filter => {
-      return filter[prop] === el[prop] && filter[prop] === el[prop];
-    });
-  });
+    // console.log('data', data)
+    const dataModel = data
+    const items = []
+    const countTpl = `${items.length}/${dataModel.length}`
 
-  updateFilteredList(arrayFiltered);
-}
-
-function updateFilteredList(arrayFiltered) {
-  console.log('arrayFiltered', arrayFiltered);
-
-  $resultsListWrapper.empty();
-
-  const items = [];
- 
-    if (arrayFiltered.length) {
-        arrayFiltered.map((item, index) => {
-        items.push(item);
-        $resultsListWrapper.append(resultsListItemTpl(items, index));
-      });
+    if (dataModel.length) {
+      dataModel.map((item, index) => {
+        items.push(item)
+        $resultsListWrapper.append(resultsListItemTpl(items, index))
+      })
     }
 
-    $countWrapper.text(items.length);
+    projectsDataModel.push(...dataModel)
+    $countWrapper.text(countTpl)
+  })
 }
+function updateFilteredList (arrayFiltered) {
+  // console.log('arrayFiltered', arrayFiltered)
 
-function checkboxes() {
-  $checkboxesWrapper.on('click', 'input', function () {
-    const checkBox = $(this);
-    const value = checkBox.val();
-    const name = checkBox.attr('name');
-    
-    updateParams(checkBox, value);
-    onFilter(value, name);
-  });
-}
+  $resultsListWrapper.empty()
 
-function updateParams(el, value) {
-  const index = paramArr.indexOf(value);
-  if (el.is(':checked')) {
-    paramArr.push(value); 
-  } else {
-    if (index > -1) {
-      paramArr.splice(index, 1);
-    }
+  const items = []
+
+  if (arrayFiltered.length) {
+    arrayFiltered.map((item, index) => {
+      items.push(item)
+      $resultsListWrapper.append(resultsListItemTpl(items, index))
+    })
   }
-  updateSearchParams(paramArr)
+
+  $countWrapper.text(items.length)
 }
 
-function updateSearchParams(arr) {
-    const pathname = window.location.pathname;
-    let params = '';
-    
-    searchParams.set("projectTypeID", arr);
-    params = searchParams.toString();
-    window.history.pushState(null, null, `${pathname}?${params}`);
+function checkboxes () {
+  $checkboxesWrapper.on('click', 'input', function () {
+    const checkBox = $(this)
+    const value = checkBox.val()
+    const name = checkBox.attr('name')
+
+    updateFilterOpts(checkBox, value, name)
+  })
+}
+
+function updateFilterOpts (el, value, propName) {
+  let opts = []
+
+  if (el.is(':checked')) {
+    paramArr.push({ [`${propName}`]: value })
+    opts = paramArr
+  } else {
+    opts = $.grep(paramArr, function (e) {
+      return e[`${propName}`] !== value
+    })
+  }
+
+  console.log('opts', opts)
+  console.log('paramArr', paramArr)
+
+  onFilter(opts, propName)
+}
+
+function onFilter (filterOpts, property) {
+  const data = projectsDataModel
+  const opts = filterOpts.length > 0 ? filterOpts : data
+
+  console.log('filterOpts', filterOpts)
+
+  // console.log('data', data)
+  // console.log('filterOpts', filterOpts)
+
+  const arrayFiltered = data.filter(el => {
+    return opts.some(filter => {
+      return filter[property] === el[property]
+    })
+  })
+  // console.log('arrayFiltered', arrayFiltered)
+  updateFilteredList(arrayFiltered)
 }
 
 $(document).ready(function () {
   window.GOVUKFrontend.initAll()
-  
-  getCheckboxOpts();
-  getProjectData();
-  checkboxes();
+
+  getCheckboxOpts()
+  getProjectData()
+  checkboxes()
 })

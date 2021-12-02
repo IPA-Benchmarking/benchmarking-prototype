@@ -1,5 +1,30 @@
+.ccms-loader {
+    border: 12px solid #DEE0E2;
+    border-radius: 50%;
+    border-top-color: #005EA5;
+    width: 80px;
+    height: 80px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+    margin: 0 auto;
+}
+@-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
 
+.ajax-loader {
+    margin-top: 30px;
+    display: none;
+}
 
+.ajax-loader-text {
+    text-align: center;
+}
 .bold-figures { 
     color:  #28A197;
     font-size: 80px;
@@ -66,3 +91,4 @@
         font-size: 18px;
     }
 }
+
