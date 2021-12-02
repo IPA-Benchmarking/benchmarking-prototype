@@ -66,6 +66,32 @@
     }
 }
 
+.box-stack {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 50px 0;
+
+    .box {
+        border: 1px solid #B1B4B6;
+        width: 27%;
+        padding: 20px;
+
+        .image-place-holer {
+            background-color:#B1B4B6;
+            height: 197px;
+            width: 300px;
+            margin-bottom: 20px;
+        }
+    }
+}
+
+.no-border {
+    .box {
+        border: none;
+    }
+}
+
 .sort {
     display: flex; 
     justify-content: flex-end;
@@ -85,10 +111,29 @@
     }
 }
 
-
 @media (min-width: 40.0625em) {
     .govuk-accordion__section-button{
         font-size: 18px;
     }
 }
 
+.index{
+    ul {
+        margin-left: 0;
+        padding-left: 0;
+        margin-bottom: 35px;
+    }
+
+    .current-sprint {
+        font-size: 18px;
+    }
+
+    li {
+        margin-bottom: 8px;
+        list-style: none;
+    }
+}
+
+.blue {
+    border: 2px solid #1D70B8;
+}

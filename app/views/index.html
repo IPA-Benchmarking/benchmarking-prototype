@@ -1,94 +1,119 @@
-
 {% extends "layout.html" %}
 
 {% block pageTitle %}
-  GOV.UK Prototype Kit
+GOV.UK Prototype Kit
 {% endblock %}
 
 {% block content %}
 
-  <div class="govuk-grid-row">
+<div class="govuk-grid-row index">
     <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-xl">
-        Infrastructure and projects authority - Benchmarking
-        <span class="govuk-caption-xl">Current revision</span>
-      </h1>{{releaseVersion | log }}
-      <p></p>
+        <h1 class="govuk-heading-xl">
+            Infrastructure and projects authority - Benchmarking
+            <span class="govuk-caption-xl">Current revision</span>
+        </h1>{{releaseVersion | log }}
+        <p></p>
+        <p></p>
 
-      <p></p>
+        <!--        <h2 class="govuk-heading-m">Sprint 4 (In progress)</h2>-->
 
-      <h2 class="govuk-heading-m">Sprint 3 (In progress)</h2>
+        <!--        <p>Prototype:</p>-->
+        <!--        <ul>-->
+        <!--            <li><a href="pages/login-page.html">Login Page</a></li>-->
+        <!--            <li><a href="pages/infrastructure-projects.html">Benchmarking Projects</a></li>-->
+        <!--            <li><a href="pages/benchmarking-summary.html">Benchmarking Summary</a></li>-->
+        <!--        </ul>-->
 
-      <p>Prototype:</p>
-      <ul>
-        <li><a href="pages/login-page.html">Login Page</a></li>
-        <li><a href="pages/infrastructure-projects.html">Benchmarking Projects</a></li>
-        <li><a href="pages/benchmarking-summary.html">Benchmarking Summary</a></li>
-      </ul>
+        <!--        <details class="govuk-details" data-module="govuk-details">-->
+        <!--            <summary class="govuk-details__summary">-->
+        <!--         <span class="govuk-details__summary-text">-->
+        <!--           Iteration details-->
+        <!--         </span>-->
+        <!--            </summary>-->
+        <!--            <div class="govuk-details__text">-->
+        <!--                <ul>-->
+        <!--                </ul>-->
+        <!--            </div>-->
+        <!--        </details>-->
 
-     <details class="govuk-details" data-module="govuk-details">
-       <summary class="govuk-details__summary">
+        <h2 class="govuk-heading-l">Sprint 3 (In progress)</h2>
+
+        <p class="govuk-heading-s">version: 3.1</p>
+        <ul class="current-sprint">
+            <li><a href="/i3/pages/benchmarking-home.html">Benchmarking Home</a></li>
+            <li><a href="/i3/pages/benchmarking-sign-in.html">Benchmarking Sign in</a></li>
+            <li><a href="/i3/pages/benchmarking-asset.html">Benchmarking Asset</a></li>
+        </ul>
+
+        <p class="govuk-heading-s">version: 3</p>
+        <ul>
+            <li><a href="pages/login-page.html">Login Page</a></li>
+            <li><a href="pages/infrastructure-projects.html">Benchmarking Projects</a></li>
+            <li><a href="pages/benchmarking-summary.html">Benchmarking Summary</a></li>
+        </ul>
+
+        <details class="govuk-details" data-module="govuk-details">
+            <summary class="govuk-details__summary">
          <span class="govuk-details__summary-text">
            Iteration details
          </span>
-       </summary>
-       <div class="govuk-details__text">
-         <ul>
-         </ul>
-       </div>
-      </details>
+            </summary>
+            <div class="govuk-details__text">
+                <ul>
+                </ul>
+            </div>
+        </details>
 
-      <h2 class="govuk-heading-m">Sprint 2</h2>
+        <h2 class="govuk-heading-m">Sprint 2</h2>
 
-      <p>Prototype:</p>
-      <ul>
-        <li><a href="pages/login-page.html">Login Page</a></li>
-        <li><a href="pages/infrastructure-projects.html">Filter Page</a></li>
-      </ul>
 
-     <details class="govuk-details" data-module="govuk-details">
-       <summary class="govuk-details__summary">
+        <ul>
+            <li><a href="pages/login-page.html">Login Page</a></li>
+            <li><a href="pages/infrastructure-projects.html">Filter Page</a></li>
+        </ul>
+
+        <details class="govuk-details" data-module="govuk-details">
+            <summary class="govuk-details__summary">
          <span class="govuk-details__summary-text">
            Iteration details
          </span>
-       </summary>
-       <div class="govuk-details__text">
-         <ul>
-         </ul>
-       </div>
-      </details>
+            </summary>
+            <div class="govuk-details__text">
+                <ul>
+                </ul>
+            </div>
+        </details>
 
-      <h2 class="govuk-heading-m">Sprint 1</h2>
+        <h2 class="govuk-heading-m">Sprint 1</h2>
 
-     <details class="govuk-details" data-module="govuk-details">
-       <summary class="govuk-details__summary">
+        <details class="govuk-details" data-module="govuk-details">
+            <summary class="govuk-details__summary">
          <span class="govuk-details__summary-text">
            Iteration details
          </span>
-       </summary>
-       <div class="govuk-details__text">
-         <ul>
-         </ul>
-       </div>
-      </details>
+            </summary>
+            <div class="govuk-details__text">
+                <ul>
+                </ul>
+            </div>
+        </details>
 
- 
 
-      <h2 class="govuk-heading-m">Page templates</h2>
+        <h2 class="govuk-heading-m">Page templates</h2>
 
-      <p><a href="templates/guidance.html">Guidance pages</a></p>
+        <p><a href="templates/guidance.html">Guidance pages</a></p>
 
-      <h2 class="govuk-heading-m">Examples and documentation</h2>
+        <h2 class="govuk-heading-m">Examples and documentation</h2>
 
-      <ul class="govuk-list govuk-list--bullet">
-        <li>
-          <a href="/docs/tutorials-and-examples">Example pages and documentation</a>
-        </li>
-        <li>
-          <a href="https://design-system.service.gov.uk">GOV.UK Design System</a>
-        </li>
-      </ul>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>
+                <a href="/docs/tutorials-and-examples">Example pages and documentation</a>
+            </li>
+            <li>
+                <a href="https://design-system.service.gov.uk">GOV.UK Design System</a>
+            </li>
+        </ul>
     </div>
-  </div>
+</div>
 
 {% endblock %}
