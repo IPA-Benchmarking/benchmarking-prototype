@@ -158,3 +158,34 @@
         visibility: visible;
     }
 }
+
+.ipa-custom-textfield {
+    .govuk-form-group {
+        width: 250px;
+        display: inline-block;
+        margin-bottom: 0;
+
+        input {
+            display: inline-block;
+            width: 100px;
+            z-index: 2;
+            position: relative;
+        }
+
+        .metric {
+            display: inline-block;
+            width: auto;
+            height: 25px;
+            padding: 6px 6px 5px;
+            border:2px solid #0b0c0c;
+            margin-left:-6px ;
+            position: relative;
+            z-index: 1;
+            background-color: #F3F2F1;
+            vertical-align: top;
+        }
+    }
+
+
+}
+

@@ -75,7 +75,7 @@ function getCheckboxOpts () {
 
 function getAssetOpts () {
   $.getJSON(`${ipaConfig.url}/projectType`, function (data) {
-    if (data.length) {
+    if ($('.asset-list').length && data.length) {
       //const groupSectors = _.mapValues(_.groupBy(data, 'sector'), sectorList => sectorList.map(sector => _.omit(sector, 'sector')))
       const groupSectors = _.mapValues(_.groupBy(data, 'sector'))
       console.log('groupSectors', groupSectors)
