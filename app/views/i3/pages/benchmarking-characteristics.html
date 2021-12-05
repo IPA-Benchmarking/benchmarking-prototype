@@ -10,7 +10,7 @@ GOV.UK Prototype Kit
     <div class="govuk-grid-column-two-thirds">
 
             <div class="govuk-form-group">
-                <fieldset class="govuk-fieldset"  aria-describedby="disability-hint">
+                <fieldset class="govuk-fieldset criteria"  aria-describedby="disability-hint">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                         <h1 class="govuk-fieldset__heading" style="margin-bottom: 40px">
                             <span class="govuk-caption-xl">Question 2 of 2</span>
@@ -28,26 +28,20 @@ GOV.UK Prototype Kit
                         </summary>
                         <div class="govuk-details__text">
                             <fieldset class="govuk-fieldset">
-<!--                                <legend class="govuk-fieldset__legend govuk-fieldset__legend&#45;&#45;l">-->
-<!--                                    <h1 class="govuk-fieldset__heading">-->
-<!--                                        What is your address?-->
-<!--                                    </h1>-->
-<!--                                </legend>-->
-
                                 <div class="ipa-custom-textfield">
                                     <div class="govuk-form-group">
-                                        <label class="govuk-label" for="address-line-1">
-                                            Minimum <span class="govuk-visually-hidden">Please input Minimum</span>
+                                        <label class="govuk-label" for="minLength">
+                                            Minimum <span class="govuk-visually-hidden">Please input physical measurements min length</span>
                                         </label>
-                                        <input class="govuk-input" id="address-line-1" name="address-line-1" type="text" autocomplete="address-line1">
+                                        <input class="govuk-input" id="minLength" name="minLength" type="text" autocomplete="minLength">
                                         <span class="metric">metre</span>
                                     </div>
 
                                     <div class="govuk-form-group">
                                         <label class="govuk-label" for="address-line-2">
-                                            Maximum<span class="govuk-visually-hidden">Please input Minimum</span>
+                                            Maximum<span class="govuk-visually-hidden">Please input physical measurements max length</span>
                                         </label>
-                                        <input class="govuk-input" id="address-line-2" name="address-line-2" type="text" autocomplete="address-line2">
+                                        <input class="govuk-input" id="maxLength" name="maxLength" type="text" autocomplete="maxLength">
                                         <span class="metric">metre</span>
                                     </div>
                                 </div>
@@ -63,26 +57,20 @@ GOV.UK Prototype Kit
                         </summary>
                         <div class="govuk-details__text">
                             <fieldset class="govuk-fieldset">
-                                <!--                                <legend class="govuk-fieldset__legend govuk-fieldset__legend&#45;&#45;l">-->
-                                <!--                                    <h1 class="govuk-fieldset__heading">-->
-                                <!--                                        What is your address?-->
-                                <!--                                    </h1>-->
-                                <!--                                </legend>-->
-
                                 <div class="ipa-custom-textfield">
                                     <div class="govuk-form-group">
-                                        <label class="govuk-label" for="address-line-1">
-                                            Minimum <span class="govuk-visually-hidden">Please input Minimum</span>
+                                        <label class="govuk-label" for="minHeight">
+                                            Minimum <span class="govuk-visually-hidden">Please input physical measurements for min height</span>
                                         </label>
-                                        <input class="govuk-input" id="address-line-1" name="address-line-1" type="text" autocomplete="address-line1">
+                                        <input class="govuk-input" id="minHeight" name="minHeight" type="text" autocomplete="minHeight">
                                         <span class="metric">metre</span>
                                     </div>
 
                                     <div class="govuk-form-group">
-                                        <label class="govuk-label" for="address-line-2">
-                                            Maximum<span class="govuk-visually-hidden">Please input Minimum</span>
+                                        <label class="govuk-label" for="maxHeight">
+                                            Maximum<span class="govuk-visually-hidden">Please input physical measurements for max height</span>
                                         </label>
-                                        <input class="govuk-input" id="address-line-2" name="address-line-2" type="text" autocomplete="address-line2">
+                                        <input class="govuk-input" id="maxHeight" name="minHeight" type="text" autocomplete="maxHeight">
                                         <span class="metric">metre</span>
                                     </div>
                                 </div>
@@ -98,27 +86,21 @@ GOV.UK Prototype Kit
                         </summary>
                         <div class="govuk-details__text">
                             <fieldset class="govuk-fieldset">
-                                <!--                                <legend class="govuk-fieldset__legend govuk-fieldset__legend&#45;&#45;l">-->
-                                <!--                                    <h1 class="govuk-fieldset__heading">-->
-                                <!--                                        What is your address?-->
-                                <!--                                    </h1>-->
-                                <!--                                </legend>-->
-
                                 <div class="ipa-custom-textfield">
                                     <div class="govuk-form-group">
-                                        <label class="govuk-label" for="address-line-1">
-                                            Minimum <span class="govuk-visually-hidden">Please input Minimum</span>
+                                        <label class="govuk-label" for="minVolume">
+                                            Minimum <span class="govuk-visually-hidden">Please input physical measurements for min volume</span>
                                         </label>
-                                        <input class="govuk-input" id="address-line-1" name="address-line-1" type="text" autocomplete="address-line1">
+                                        <input class="govuk-input" id="minVolume" name="minVolume" type="text" autocomplete="minVolume">
                                         <span class="metric">cubic metre</span>
                                     </div>
 
                                     <div class="govuk-form-group">
-                                        <label class="govuk-label" for="address-line-2">
-                                            Maximum<span class="govuk-visually-hidden">Please input Minimum</span>
+                                        <label class="govuk-label" for="maxVolume">
+                                            Maximum<span class="govuk-visually-hidden">Please input physical measurements for min volume</span>
                                         </label>
                                         <div>
-                                            <input class="govuk-input" id="address-line-2" name="address-line-2" type="text" autocomplete="address-line2">
+                                            <input class="govuk-input" id="maxVolume" name="maxVolume" type="text" autocomplete="maxVolume">
                                             <span class="metric">cubic metre</span>
                                         </div>
                                     </div>
@@ -138,11 +120,6 @@ GOV.UK Prototype Kit
                         <div class="govuk-details__text">
                             <div class="govuk-form-group">
                                 <fieldset class="govuk-fieldset">
-                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                                        <h1 class="govuk-fieldset__heading">
-                                            Where do you live?
-                                        </h1>
-                                    </legend>
                                     <div class="govuk-radios">
                                         <div class="govuk-radios__item">
                                             <input class="govuk-radios__input" id="where-do-you-live" name="where-do-you-live" type="radio" value="england">
@@ -177,11 +154,6 @@ GOV.UK Prototype Kit
                         <div class="govuk-details__text">
                             <div class="govuk-form-group">
                                 <fieldset class="govuk-fieldset">
-                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                                        <h1 class="govuk-fieldset__heading">
-                                            Where do you live?
-                                        </h1>
-                                    </legend>
                                     <div class="govuk-radios">
                                         <div class="govuk-radios__item">
                                             <input class="govuk-radios__input" id="where-do-you-live" name="where-do-you-live" type="radio" value="england">
@@ -216,9 +188,14 @@ GOV.UK Prototype Kit
                             </span>
                         </summary>
                         <div class="govuk-details__text">
-                            We need to know your nationality so we can work out which elections you’re entitled to vote
-                            in. If you cannot provide your nationality, you’ll have to send copies of identity documents
-                            through the post.
+                            <div class="govuk-form-group">
+                                <fieldset class="govuk-fieldset">
+                                    <div id="waste-hint hidden" class="govuk-hint">
+                                        Select all that apply.
+                                    </div>
+                                    <div class="govuk-checkboxes region-list" data-module="govuk-checkboxes"></div>
+                                </fieldset>
+                            </div>
                         </div>
                     </details>
 

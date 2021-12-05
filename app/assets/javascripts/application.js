@@ -11,7 +11,8 @@ if (window.location.search && $('.results').length) {
 
 const evn = window.location.host
 const ipaConfig = {
-  url: evn.search('localhost') > -1 ? 'http://localhost:4041/api' : 'https://ipamockapi.herokuapp.com/api'
+  url: evn.search('localhost') > -1 ? 'http://localhost:4041/api' : 'https://ipamockapi.herokuapp.com/api',
+  appDataModel: {}
 }
 
 console.log(ipaConfig.url)
@@ -19,20 +20,11 @@ console.log(ipaConfig.url)
 const projectsDataModel = []
 const paramArr = []
 const $resultsListWrapper = $('.results-list')
-const $checkboxesWrapper = $('.govuk-checkboxes')
+const $resultPageWrapper = $('.results-page')
 const $countWrapper = $('.results-count')
 const $assetSectionWrapper = $('.govuk-radios')
-
-const checkboxTpl = (items, i) => {
-  const inputId = _.camelCase(items[i].text)
-  return `<div class="govuk-checkboxes" data-module="govuk-checkboxes">
-  <div class="govuk-checkboxes__item">
-    <input class="govuk-checkboxes__input" id="${inputId}" name="projectTypeID" type="checkbox" value="${items[i].value}">
-    <label class="govuk-label govuk-checkboxes__label" for="waste">
-      ${items[i].text}
-    </label>
-  </div>`
-}
+const $criteriaWrapper = $('.criteria')
+const $regionListWrapper = $('.region-list')
 
 const assetGroups = (section) => {
   const name = _.startCase(_.toLower(section))
@@ -40,15 +32,28 @@ const assetGroups = (section) => {
   return `<section id="${id}" class="${id} sectors"><h3 class="govuk-heading-m">${name}</h3></section>`
 }
 
-const radiobuttonTpl = (items, i) => {
-  const type = _.camelCase(items.type)
-  return `    
-                <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="${type}" name="${items.sector}" type="radio" value="${items.id}">
-                            <label class="govuk-label govuk-radios__label" for="${type}">
-                                   ${items.type}
-                            </label>
-                        </div>`
+const radiobuttonTpl = (items) => {
+  const type = _.camelCase(items.type) || _.camelCase(items)
+
+  return `<div class="govuk-radios__item">
+               <input class="govuk-radios__input" id="${type}" name="${type}" type="radio" value="${type}">
+               <label class="govuk-label govuk-radios__label" for="${type}">
+                        ${items.type || items}
+               </label>
+           </div>`
+}
+
+const checkboxTpl = (items, i) => {
+  const inputId = items.isArray && $regionListWrapper.length === 0 ? _.camelCase(items[i].text) : _.camelCase(items)
+  const inputVal = items.isArray && $regionListWrapper.length === 0 ? _.camelCase(items[i].value) : _.camelCase(items)
+
+  return `<div class="govuk-checkboxes" data-module="govuk-checkboxes">
+  <div class="govuk-checkboxes__item">
+    <input class="govuk-checkboxes__input" id="${inputId}" name="projectTypeID" type="checkbox" value="${inputVal}">
+    <label class="govuk-label govuk-checkboxes__label" for="${inputId}">
+      ${items.isArray ? items[i].text : items}
+    </label>
+  </div>`
 }
 
 const resultsListItemTpl = (results, i) => {
@@ -64,10 +69,10 @@ function getCheckboxOpts () {
   $.getJSON(`${ipaConfig.url}/projectType`, function (data) {
     const items = []
 
-    if (data.length) {
+    if ($resultPageWrapper.length > 0 && data.length) {
       data.map((item, index) => {
         items.push({ text: item.type, value: item.id })
-        $checkboxesWrapper.append(checkboxTpl(items, index))
+        $resultPageWrapper.append(checkboxTpl(items, index))
       })
     }
   })
@@ -100,6 +105,8 @@ function getProjectData () {
     const items = []
     const countTpl = `${items.length}/${dataModel.length}`
 
+    console.log('data', data)
+
     if (dataModel.length) {
       dataModel.map((item, index) => {
         items.push(item)
@@ -109,6 +116,9 @@ function getProjectData () {
 
     projectsDataModel.push(...dataModel)
     $countWrapper.text(countTpl)
+
+  }).done((data) => {
+    getAllRegions(data)
   })
 }
 
@@ -130,7 +140,7 @@ function updateFilteredList (arrayFiltered) {
 }
 
 function checkboxes () {
-  $checkboxesWrapper.on('click', 'input', function () {
+  $resultPageWrapper.on('click', 'input', function () {
     const checkBox = $(this)
     const value = checkBox.val()
     const name = checkBox.attr('name')
@@ -175,11 +185,24 @@ function onFilter (filterOpts, property) {
   updateFilteredList(arrayFiltered)
 }
 
+function getAllRegions (data) {
+  if ($criteriaWrapper.length) {
+    const groupRegions = _.mapValues(_.groupBy(data, 'assetRegion'))
+    const regionList = Object.keys(groupRegions)
+
+    regionList.unshift('All of the uk');
+
+    regionList.map((items, index) => {
+      $regionListWrapper.append(checkboxTpl(items, index))
+    })
+  }
+}
+
 $(document).ready(function () {
   window.GOVUKFrontend.initAll()
-
   getCheckboxOpts()
   getAssetOpts()
   getProjectData()
   checkboxes()
+
 })
