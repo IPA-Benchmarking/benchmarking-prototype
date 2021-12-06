@@ -5,7 +5,6 @@ GOV.UK Prototype Kit
 {% endblock %}
 
 {% block content %}
-
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
@@ -38,7 +37,7 @@ GOV.UK Prototype Kit
                                     </div>
 
                                     <div class="govuk-form-group">
-                                        <label class="govuk-label" for="address-line-2">
+                                        <label class="govuk-label" for="maxLength">
                                             Maximum<span class="govuk-visually-hidden">Please input physical measurements max length</span>
                                         </label>
                                         <input class="govuk-input" id="maxLength" name="maxLength" type="text" autocomplete="maxLength">
@@ -122,21 +121,21 @@ GOV.UK Prototype Kit
                                 <fieldset class="govuk-fieldset">
                                     <div class="govuk-radios">
                                         <div class="govuk-radios__item">
-                                            <input class="govuk-radios__input" id="where-do-you-live" name="where-do-you-live" type="radio" value="england">
-                                            <label class="govuk-label govuk-radios__label" for="where-do-you-live">
-                                                England
+                                            <input class="govuk-radios__input" id="sand" name="groundType" type="radio" value="sand">
+                                            <label class="govuk-label govuk-radios__label" for="sand">
+                                                Sand
                                             </label>
                                         </div>
                                         <div class="govuk-radios__item">
-                                            <input class="govuk-radios__input" id="where-do-you-live-2" name="where-do-you-live" type="radio" value="scotland">
-                                            <label class="govuk-label govuk-radios__label" for="where-do-you-live-2">
-                                                Scotland
+                                            <input class="govuk-radios__input" id="clay" name="groundType" type="radio" value="clay">
+                                            <label class="govuk-label govuk-radios__label" for="clay">
+                                                Clay
                                             </label>
                                         </div>
                                         <div class="govuk-radios__item">
-                                            <input class="govuk-radios__input" id="where-do-you-live-3" name="where-do-you-live" type="radio" value="wales">
-                                            <label class="govuk-label govuk-radios__label" for="where-do-you-live-3">
-                                                Wales
+                                            <input class="govuk-radios__input" id="mix" name="groundType" type="radio" value="mix">
+                                            <label class="govuk-label govuk-radios__label" for="mix">
+                                                Mixture of sand and clay
                                             </label>
                                         </div>
                                     </div>
@@ -156,21 +155,21 @@ GOV.UK Prototype Kit
                                 <fieldset class="govuk-fieldset">
                                     <div class="govuk-radios">
                                         <div class="govuk-radios__item">
-                                            <input class="govuk-radios__input" id="where-do-you-live" name="where-do-you-live" type="radio" value="england">
-                                            <label class="govuk-label govuk-radios__label" for="where-do-you-live">
-                                                England
+                                            <input class="govuk-radios__input" id="cement" name="material" type="radio" value="cement">
+                                            <label class="govuk-label govuk-radios__label" for="cement">
+                                                Cement
                                             </label>
                                         </div>
                                         <div class="govuk-radios__item">
-                                            <input class="govuk-radios__input" id="where-do-you-live-2" name="where-do-you-live" type="radio" value="scotland">
-                                            <label class="govuk-label govuk-radios__label" for="where-do-you-live-2">
-                                                Scotland
+                                            <input class="govuk-radios__input" id="stoneGravel" name="material" type="radio" value="stoneGravel">
+                                            <label class="govuk-label govuk-radios__label" for="stoneGravel">
+                                                Stone and gravel
                                             </label>
                                         </div>
                                         <div class="govuk-radios__item">
-                                            <input class="govuk-radios__input" id="where-do-you-live-3" name="where-do-you-live" type="radio" value="wales">
-                                            <label class="govuk-label govuk-radios__label" for="where-do-you-live-3">
-                                                Wales
+                                            <input class="govuk-radios__input" id="other" name="material" type="radio" value="other">
+                                            <label class="govuk-label govuk-radios__label" for="other">
+                                                other materials
                                             </label>
                                         </div>
                                     </div>
@@ -208,22 +207,17 @@ GOV.UK Prototype Kit
                         <div class="govuk-details__text">
                             <div class="govuk-form-group">
                                 <fieldset class="govuk-fieldset">
-                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                                        <h1 class="govuk-fieldset__heading">
-                                            Where do you live?
-                                        </h1>
-                                    </legend>
                                     <div class="govuk-radios">
                                         <div class="govuk-radios__item">
-                                            <input class="govuk-radios__input" id="where-do-you-live" name="where-do-you-live" type="radio" value="england">
-                                            <label class="govuk-label govuk-radios__label" for="where-do-you-live">
-                                                England
+                                            <input class="govuk-radios__input" id="public" name="sector" type="radio" value="public">
+                                            <label class="govuk-label govuk-radios__label" for="public">
+                                                Public
                                             </label>
                                         </div>
                                         <div class="govuk-radios__item">
-                                            <input class="govuk-radios__input" id="where-do-you-live-2" name="where-do-you-live" type="radio" value="scotland">
-                                            <label class="govuk-label govuk-radios__label" for="where-do-you-live-2">
-                                                Scotland
+                                            <input class="govuk-radios__input" id="private" name="sector" type="radio" value="private">
+                                            <label class="govuk-label govuk-radios__label" for="private">
+                                                Private
                                             </label>
                                         </div>
                                     </div>
@@ -241,22 +235,17 @@ GOV.UK Prototype Kit
                         <div class="govuk-details__text">
                             <div class="govuk-form-group">
                                 <fieldset class="govuk-fieldset">
-                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                                        <h1 class="govuk-fieldset__heading">
-                                            Where do you live?
-                                        </h1>
-                                    </legend>
                                     <div class="govuk-radios">
                                         <div class="govuk-radios__item">
-                                            <input class="govuk-radios__input" id="where-do-you-live" name="where-do-you-live" type="radio" value="england">
-                                            <label class="govuk-label govuk-radios__label" for="where-do-you-live">
-                                                England
+                                            <input class="govuk-radios__input" id="new" name="workType" type="radio" value="new">
+                                            <label class="govuk-label govuk-radios__label" for="new">
+                                                New construction
                                             </label>
                                         </div>
                                         <div class="govuk-radios__item">
-                                            <input class="govuk-radios__input" id="where-do-you-live-2" name="where-do-you-live" type="radio" value="scotland">
-                                            <label class="govuk-label govuk-radios__label" for="where-do-you-live-2">
-                                                Scotland
+                                            <input class="govuk-radios__input" id="maintenanceRepair" name="where-do-you-live" type="radio" value="repair">
+                                            <label class="govuk-label govuk-radios__label" for="maintenanceRepair">
+                                                Maintenance and repair
                                             </label>
                                         </div>
                                     </div>
@@ -265,7 +254,7 @@ GOV.UK Prototype Kit
                         </div>
                     </details>
 
-
+z
                 </fieldset>
                 <button class="govuk-button" data-module="govuk-button">
                     Continue

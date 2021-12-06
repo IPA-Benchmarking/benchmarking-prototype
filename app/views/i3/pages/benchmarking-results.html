@@ -1,0 +1,166 @@
+
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+GOV.UK Prototype Kit
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <div class="compare-dataset">
+            <div class="compare left">
+                <p>0 projects added to compare</p>
+            </div>
+            <div class="compare right">
+                <button class="govuk-button" data-module="govuk-button">
+                    Compare dataset
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+<div class="back-link-wrapper">
+    {{ govukBackLink({
+    text: "Back to asset type",
+    href: "#"
+    }) }}
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl results-title">
+           ###ASSETTYPE### project Data
+        </h1>
+<!--        <h2 class="govuk-heading-m">Show benchmarking data submitted by <span class="results-count">0</span> projects</h2>-->
+    </div>
+</div>
+
+<hr class="govuk-section-break govuk-section-break--visible" style="margin-bottom: 15px;">
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <ul class="govuk-list util-bar">
+            <li class="download"><a class="govuk-link" href="#">Download CSV</a></li>
+            <li class="share"><a class="govuk-link" href="#">Share this page</a></li>
+        </ul>
+
+    </div>
+
+<!--    <div class="govuk-grid-column-one-quarter">-->
+<!--        <p>Filter by:</p>-->
+<!--    </div>-->
+
+<!--    <div class="govuk-grid-column-three-quarters">-->
+<!--        {% include "includes/filter-select.html" %}-->
+<!--    </div>-->
+</div>
+
+
+<div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-one-third">
+
+        <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
+            <div class="govuk-accordion__section govuk-accordion__section--expanded">
+                <div class="govuk-accordion__section-header">
+                    <h2 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-1">
+          Asset class
+        </span>
+                    </h2>
+                </div>
+                <div id="accordion-default-content-1" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-1">
+                    {% include "includes/filter-by-checkboxes.html" %}
+                </div>
+            </div>
+            <div class="govuk-accordion__section ">
+                <div class="govuk-accordion__section-header">
+                    <h2 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-3">
+          Region
+        </span>
+                    </h2>
+                </div>
+                <div id="accordion-default-content-3" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-3">
+                    <p class='govuk-body'></p>
+                </div>
+            </div>
+            <div class="govuk-accordion__section ">
+                <div class="govuk-accordion__section-header">
+                    <h2 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-4">
+          Project end year
+        </span>
+                    </h2>
+                </div>
+                <div id="accordion-default-content-4" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-4">
+                    <p class='govuk-body'></p>
+                </div>
+            </div>
+            <div class="govuk-accordion__section ">
+                <div class="govuk-accordion__section-header">
+                    <h2 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-4">
+          Ground type
+        </span>
+                    </h2>
+                </div>
+                <div id="accordion-default-content-4" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-4">
+                    <p class='govuk-body'></p>
+                </div>
+            </div>
+            <div class="govuk-accordion__section ">
+                <div class="govuk-accordion__section-header">
+                    <h2 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-4">
+          Capacity
+        </span>
+                    </h2>
+                </div>
+                <div id="accordion-default-content-4" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-4">
+                    <p class='govuk-body'></p>
+                </div>
+            </div>
+            <div class="govuk-accordion__section ">
+                <div class="govuk-accordion__section-header">
+                    <h2 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-default-heading-4">
+          Any other measures?
+        </span>
+                    </h2>
+                </div>
+                <div id="accordion-default-content-4" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-4">
+                    <p class='govuk-body'>This is the content for How people read.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="govuk-grid-column-two-thirds">
+
+        <div class="results">
+            <div class="ajax-loader">
+                <div class="ajax-loader-text">
+                    <p class="govuk-body govuk-!-font-size-27">Loading data...</p>
+                </div>
+                <div class="ccms-loader"></div>
+            </div>
+
+            <div class="graph-wrapper">
+                <div class="graph">
+                    {% include "includes/tabs-results-page.html" %}
+                </div>
+            </div>
+
+            <ul class="results-list"></ul>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

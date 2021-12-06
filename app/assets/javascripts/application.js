@@ -26,6 +26,37 @@ const $assetSectionWrapper = $('.govuk-radios')
 const $criteriaWrapper = $('.criteria')
 const $regionListWrapper = $('.region-list')
 
+const formatToFixed = (number) => {
+  let num = number
+  num = parseFloat(num).toFixed(0)
+  return `£${Number(num).toLocaleString('en')}`
+}
+
+const toSqMetre = (length, width, cost) => {
+  if (length && width && cost) {
+    const l = length
+    const w = width
+    const result = l * w
+    const m2 = cost / result
+
+    return formatToFixed(m2)
+  }
+}
+
+const toCubic = (volume, cost) => {
+  const vol = volume || 0
+  const figure = cost || 0
+  const m3 = figure / vol
+
+  return formatToFixed(m3)
+}
+
+const average = arr => arr.reduce((a, b) => a + b, 0) / arr.length
+
+function averageCost (ds) {
+
+}
+
 const assetGroups = (section) => {
   const name = _.startCase(_.toLower(section))
   const id = _.camelCase(section)
@@ -57,12 +88,36 @@ const checkboxTpl = (items, i) => {
 }
 
 const resultsListItemTpl = (results, i) => {
+  const outturnCost = results[i].outturnCost
+  const length = results[i].length
+  const width = results[i].width
+  const volume = results[i].volume
+
   return `<li class="results-item">
-  <p class="list-item-title"><a href="#">${results[i].projectName}</a></p>
-  <p>Construction address or local authority Project end date: ${results[i].projectEndDate}</p>
-  <p>Any other information that might be interested by users can be added here.</p>
-  <button class="govuk-button govuk-button--secondary" data-module="govuk-button">Add to compare</button>
-  </li>`
+            <div class="result-head">
+                <div class="details">
+                    <p class="list-item-title"><a href="#">${results[i].projectName}</a></p>
+                </div>
+                <div class="details">
+                    <button class="govuk-button govuk-button--secondary" data-module="govuk-button">
+                        Add to compare
+                    </button>
+                </div>
+            </div>
+            
+            <div class="result-icons">
+              <p class="icon calendar">Construction completion year: ${results[i].projectEndDate}</p>
+              <p class="icon pin"> Region: ${results[i].assetRegion}</p>
+            </div>
+            
+            <div class="result-costs">
+                <ul class="govuk-list result-costs-list">
+                    <li>Outturn cost <span class="result-figure">${formatToFixed(results[i].outturnCost)}</span></li>
+                    <li>Cost/m2 <span class="result-figure">${toSqMetre(length, width, outturnCost)}</span></li>
+                    <li>Cost/m3 <span class="result-figure">${toCubic(volume, outturnCost)}</span></li>
+                </ul>
+            </div>
+        </li>`
 }
 
 function getCheckboxOpts () {
@@ -119,6 +174,7 @@ function getProjectData () {
 
   }).done((data) => {
     getAllRegions(data)
+    averageCost(data)
   })
 }
 
@@ -190,8 +246,7 @@ function getAllRegions (data) {
     const groupRegions = _.mapValues(_.groupBy(data, 'assetRegion'))
     const regionList = Object.keys(groupRegions)
 
-    regionList.unshift('All of the uk');
-
+    regionList.unshift('All of the uk')
     regionList.map((items, index) => {
       $regionListWrapper.append(checkboxTpl(items, index))
     })

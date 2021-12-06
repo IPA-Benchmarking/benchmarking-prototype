@@ -1,3 +1,4 @@
+//
 .ccms-loader {
     border: 12px solid #DEE0E2;
     border-radius: 50%;
@@ -30,10 +31,8 @@
     font-size: 80px;
     font-weight: bold;
 }
-
-.results-item {
-    list-style: none;
-    
+.back-link-wrapper {
+    margin-bottom: 20px;
 }
 
 .govuk-accordion__section {
@@ -101,6 +100,31 @@
     label {
         padding-top: 8px;
         padding-right: 10px;
+    }
+}
+
+.compare-dataset {
+    background-color: #CCE2D8;
+    display: flex;
+    justify-content: right;
+    margin: -50px 0 20px 0;
+    text-align: right;
+
+    .compare {
+        width: 50%;
+        padding: 20px 20px;
+
+        p {
+            margin: 8px 0 0 0;
+        }
+
+        .govuk-button {
+            margin-bottom: 0;
+        }
+
+        &.left {
+            text-align: left;
+        }
     }
 }
 
@@ -185,7 +209,134 @@
             vertical-align: top;
         }
     }
-
-
 }
+
+.results-item {
+    padding: 20px 0;
+    border-top:1px solid #B1B4B6;
+    list-style: none;
+}
+
+.result-icons {
+    display: flex;
+
+    .icon {
+        padding-left: 40px;
+        padding-bottom: 20px;
+        padding-top: 6px;
+        background-repeat: no-repeat;
+        width: 60%;
+        font-size: 16px;
+    }
+
+    .pin {
+        background-image: url('../images/plotter.png');
+        padding-left: 30px;
+        width: 40%;
+    }
+
+    .calendar {
+        background-image: url('../images/calender.png');
+    }
+}
+
+.results-list {
+    padding: 0;
+    margin: 0;
+
+    .list-item-title {
+        font-size: 24px;
+        font-weight: bold;
+    }
+}
+
+
+.result-head {
+    display: flex;
+
+    .details {
+        width: 50%;
+        text-align: right;
+
+        &:first-child {
+            padding-top: 15px;
+            text-align: left;
+        }
+    }
+}
+
+.result-costs-list {
+    color: #505A5F;
+
+    li {
+
+        display: inline-block;
+        margin-right: 15px;
+    }
+
+    .result-figure {
+        font-size: 16px;
+        background-color: #1D70B8;
+        color: #fff;
+        display: inline-block;
+        margin-left: 1px;
+        padding: 5px 8px;
+    }
+}
+
+.util-bar {
+    margin-bottom: 20px;
+
+    li {
+        font-size: 18px;
+        display: inline-block;
+        background-repeat: no-repeat;
+        padding-bottom: 20px;
+        padding-top: 9px;
+        padding-left: 43px;
+        margin-right: 10px;
+
+        &.download {
+            background-image: url('../images/download.png');
+        }
+
+        &.share {
+            background-image: url('../images/share.png');
+        }
+    }
+}
+
+.graph-wrapper {
+    border-top: 1px solid #B1B4B6;
+
+    .govuk-tabs {
+        margin-bottom: 0;
+    }
+
+    .figures {
+        margin-top: -1px;
+        background-color:#144E81;
+        border: 1px solid #B1B4B6;
+        padding: 20px;
+
+        p {
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 0;
+            text-align: center;
+        }
+
+        .bold-figures {
+            color: #fff;
+            font-size: 36px;
+            padding: 10px 30px 0;
+        }
+    }
+
+    .graph {
+        margin-top: 40px;
+    }
+}
+
+
 
