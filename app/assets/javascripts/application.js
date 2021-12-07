@@ -41,7 +41,7 @@ const toCubic = (volume, cost) => {
 const evn = window.location.host
 
 const ipaConfig = {
-  url: evn.search('localhost') > -1 ? 'http://localhost:4041/api' : 'https://ipamockapi.herokuapp.com/api',
+  url: 'https://ipamockapi.herokuapp.com/api'
 }
 
 const appDataModel = {
@@ -277,7 +277,7 @@ function getAssetResultsData () {
   }
 }
 
-function checkboxes () {
+function onInput () {
   $resultPageWrapper.on('click', 'input', function () {
     const checkBox = $(this)
     const value = checkBox.val()
@@ -347,7 +347,7 @@ $(document).ready(function () {
 
   /**** Results page ****/
   getAssetResultsData()
-  checkboxes()
+  onInput()
 
   //getCheckboxOpts()
   //getProjectData()
