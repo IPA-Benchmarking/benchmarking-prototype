@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+GOV.UK Prototype Kit
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <div class="compare-dataset">
+            <div class="compare left">
+                <p>0 projects added to compare</p>
+            </div>
+            <div class="compare right">
+                <button class="govuk-button" data-module="govuk-button">
+                    Compare dataset
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+<div class="back-link-wrapper">
+    {{ govukBackLink({
+    text: "Back to asset type",
+    href: "benchmarking-asset"
+    }) }}
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl results-title">
+            Select <span class="text-placeholder assetTitle">###ASSETTYPE###</span> projects
+        </h1>
+    </div>
+</div>
+
+<hr class="govuk-section-break govuk-section-break--visible" style="margin-bottom: 15px;">
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <ul class="govuk-list util-bar">
+            <li class="download"><a class="govuk-link" href="#">Download CSV</a></li>
+            <li class="share"><a class="govuk-link" href="#">Share this page</a></li>
+        </ul>
+    </div>
+</div>
+
+
+<div class="govuk-grid-row results-page">
+
+    <div class="govuk-grid-column-one-third">
+
+        <p>Filter by:</p>
+
+        {% include "includes/accordion.html" %}
+        {% include "includes/filter-select.html" %}
+    </div>
+
+    <div class="govuk-grid-column-two-thirds">
+
+        <div class="results">
+            <!--            <div class="ajax-loader">-->
+            <!--                <div class="ajax-loader-text">-->
+            <!--                    <p class="govuk-body govuk-!-font-size-27">Loading data...</p>-->
+            <!--                </div>-->
+            <!--                <div class="ccms-loader"></div>-->
+            <!--            </div>-->
+
+            <div class="result-head">
+                <div class="details">
+                    <p class="list-item-title govuk-!-font-weight-bold">Showing <span class="results-count ">29</span>
+                        projects</p>
+                </div>
+                <div class="details">
+                    <button class="govuk-button govuk-button--secondary" data-module="govuk-button">
+                        Add all to dataset
+                    </button>
+                </div>
+            </div>
+
+            <div class="graph-wrapper">
+                <div class="graph">
+                    {% include "includes/tabs-results-page.html" %}
+                </div>
+            </div>
+
+            <ul class="results-list"></ul>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

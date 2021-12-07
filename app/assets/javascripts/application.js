@@ -9,22 +9,7 @@ if (window.location.search && $('.results').length) {
   window.history.replaceState({}, document.title, window.location.pathname)
 }
 
-const evn = window.location.host
-const ipaConfig = {
-  url: evn.search('localhost') > -1 ? 'http://localhost:4041/api' : 'https://ipamockapi.herokuapp.com/api',
-  appDataModel: {}
-}
-
-console.log(ipaConfig.url)
-
-const projectsDataModel = []
-const paramArr = []
-const $resultsListWrapper = $('.results-list')
-const $resultPageWrapper = $('.results-page')
-const $countWrapper = $('.results-count')
-const $assetSectionWrapper = $('.govuk-radios')
-const $criteriaWrapper = $('.criteria')
-const $regionListWrapper = $('.region-list')
+/*********  START: HELPERS ***********/
 
 const formatToFixed = (number) => {
   let num = number
@@ -51,11 +36,39 @@ const toCubic = (volume, cost) => {
   return formatToFixed(m3)
 }
 
-const average = arr => arr.reduce((a, b) => a + b, 0) / arr.length
+/*********  END: HELPERS ***********/
 
-function averageCost (ds) {
+const evn = window.location.host
 
+const ipaConfig = {
+  url: evn.search('localhost') > -1 ? 'http://localhost:4041/api' : 'https://ipamockapi.herokuapp.com/api',
 }
+
+const appDataModel = {
+  selectedAsset: { name: '', type: '' },
+  appData: [],
+  selectedAssetProjects: []
+}
+
+// const session = window.sessionStorage.getItem('app')
+
+const projectsDataModel = []
+const paramArr = []
+const assetArr = []
+const $resultsListWrapper = $('.results-list')
+const $resultPageWrapper = $('.results-page')
+const $countWrapper = $('.results-count')
+const $assetSectionWrapper = $('.select-asset-type')
+const $regionListWrapper = $('.region-list')
+const $projectCount = $('.project-count')
+const $assetTitle = $('.assetTitle')
+
+// function averageCost () {
+//   console.log('averageCost', JSON.parse(session).selectedAssetProjects)
+//   const array =  JSON.parse(session).selectedAssetProjects
+//   const average = array => arr.reduce((a, b) => a + b, 0) / arr.length
+//   console.log('average', average)
+// }
 
 const assetGroups = (section) => {
   const name = _.startCase(_.toLower(section))
@@ -65,9 +78,10 @@ const assetGroups = (section) => {
 
 const radiobuttonTpl = (items) => {
   const type = _.camelCase(items.type) || _.camelCase(items)
+  const isChecked = items.id === '2' ? 'checked' : ''
 
   return `<div class="govuk-radios__item">
-               <input class="govuk-radios__input" id="${type}" name="${type}" type="radio" value="${type}">
+               <input class="govuk-radios__input" id="${type}" name="projectTypeID" data-asset-name="${type}" type="radio" value="${items.id}" ${isChecked}>
                <label class="govuk-label govuk-radios__label" for="${type}">
                         ${items.type || items}
                </label>
@@ -120,25 +134,42 @@ const resultsListItemTpl = (results, i) => {
         </li>`
 }
 
-function getCheckboxOpts () {
-  $.getJSON(`${ipaConfig.url}/projectType`, function (data) {
-    const items = []
+// function getCheckboxOpts () {
+//   $.getJSON(`${ipaConfig.url}/projectType`, function (data) {
+//     const items = []
+//
+//     if ($resultPageWrapper.length > 0 && data.length) {
+//       data.map((item, index) => {
+//         items.push({ text: item.type, value: item.id })
+//         $resultPageWrapper.append(checkboxTpl(items, index))
+//       })
+//     }
+//   })
+// }
 
-    if ($resultPageWrapper.length > 0 && data.length) {
-      data.map((item, index) => {
-        items.push({ text: item.type, value: item.id })
-        $resultPageWrapper.append(checkboxTpl(items, index))
-      })
-    }
+function getProjectData () {
+  const params = { page: 1, limit: 10 }
+
+  $.get(`${ipaConfig.url}/projects`, params, function (data) {
+    const dataModel = data
+    projectsDataModel.push(...dataModel)
+  }).done((data) => {
+
+    const { appData } = appDataModel
+    appData.push(...data)
+
+    getAssetData()
+    getAllRegions(data)
+    // averageCost()
   })
 }
+
+/********* START: ASSET SELECTION PAGE  ***********/
 
 function getAssetOpts () {
   $.getJSON(`${ipaConfig.url}/projectType`, function (data) {
     if ($('.asset-list').length && data.length) {
-      //const groupSectors = _.mapValues(_.groupBy(data, 'sector'), sectorList => sectorList.map(sector => _.omit(sector, 'sector')))
       const groupSectors = _.mapValues(_.groupBy(data, 'sector'))
-      console.log('groupSectors', groupSectors)
 
       Object.keys(groupSectors).forEach(function (key, index) {
         const sectorArr = groupSectors[key]
@@ -149,50 +180,101 @@ function getAssetOpts () {
         })
       })
     }
+  }).done(() => {
+    setAssetOpts()
   })
 }
 
-function getProjectData () {
-  const params = { page: 1, limit: 10 }
+function setAssetOpts () {
+  if ($assetSectionWrapper.length) {
+    const elem = $assetSectionWrapper.find('input:checked')
+    const value = elem.val()
+    const prop = elem.attr('name')
+    const name = elem.data('asset-name')
+    const { selectedAsset } = appDataModel
 
-  $.get(`${ipaConfig.url}/projects`, params, function (data) {
-    const dataModel = data
+    selectedAsset.name = value
+    selectedAsset.type = name
+
+    assetArr.push({ [`${prop}`]: value })
+  }
+}
+
+function getAssetData (event, asset) {
+  if ($assetSectionWrapper.length === 0) {
+    return
+  }
+
+  const { appData } = appDataModel
+  const selectedAsset = asset
+  if (appData && appData.length) {
+    const projectTypeID = !event ? assetArr : selectedAsset
+    const property = projectTypeID.length ? Object.keys(...projectTypeID) : []
+    let filterData = []
+
+    filterData = appData.filter(el => {
+      return projectTypeID.some(filter => {
+        return filter[property] === el[property]
+      })
+    })
+    const { selectedAssetProjects } = appDataModel
+    selectedAssetProjects.push(filterData)
+
+    $projectCount.html(filterData.length)
+
+    console.log('filterData', filterData)
+  }
+}
+
+function assetInputs () {
+  $assetSectionWrapper.on('change', 'input', function (event) {
+    const input = $(this)
+    const value = input.val()
+    const prop = input.attr('name')
+    const name = input.data('asset-name')
+    const selectedAssetArr = []
+    const { selectedAsset } = appDataModel
+
+    selectedAsset.name = value
+    selectedAsset.type = name
+
+    selectedAssetArr.push({ [`${prop}`]: value })
+    getAssetData(event, selectedAssetArr)
+  })
+}
+
+/********* END: ASSET SELECTION PAGE  ***********/
+
+/********* START: RESULT PAGE ***********/
+
+function getAllRegions (data) {
+  if ($regionListWrapper.length) {
+    const groupRegions = _.mapValues(_.groupBy(data, 'assetRegion'))
+    const regionList = Object.keys(groupRegions)
+
+    regionList.unshift('All of the uk')
+    regionList.map((items, index) => {
+      $regionListWrapper.append(checkboxTpl(items, index))
+    })
+  }
+}
+
+function getAssetResultsData () {
+  if ($resultPageWrapper.length) {
+    const getSession = window.sessionStorage.getItem('app')
+    const session = JSON.parse(getSession)
+    const { selectedAssetProjects, selectedAsset } = session
+    const data = selectedAssetProjects
     const items = []
-    const countTpl = `${items.length}/${dataModel.length}`
+    $assetTitle.html(selectedAsset.type)
 
-    console.log('data', data)
-
-    if (dataModel.length) {
-      dataModel.map((item, index) => {
+    if (data.length) {
+      data[0].map((item, index) => {
         items.push(item)
         $resultsListWrapper.append(resultsListItemTpl(items, index))
       })
     }
-
-    projectsDataModel.push(...dataModel)
-    $countWrapper.text(countTpl)
-
-  }).done((data) => {
-    getAllRegions(data)
-    averageCost(data)
-  })
-}
-
-function updateFilteredList (arrayFiltered) {
-  // console.log('arrayFiltered', arrayFiltered)
-
-  $resultsListWrapper.empty()
-
-  const items = []
-
-  if (arrayFiltered.length) {
-    arrayFiltered.map((item, index) => {
-      items.push(item)
-      $resultsListWrapper.append(resultsListItemTpl(items, index))
-    })
   }
-
-  $countWrapper.text(items.length)
 }
 
 function checkboxes () {
@@ -229,35 +311,56 @@ function onFilter (filterOpts, property) {
 
   console.log('filterOpts', filterOpts)
 
-  // console.log('data', data)
-  // console.log('filterOpts', filterOpts)
-
   const arrayFiltered = data.filter(el => {
     return opts.some(filter => {
       return filter[property] === el[property]
     })
   })
-  // console.log('arrayFiltered', arrayFiltered)
+  console.log('arrayFiltered', arrayFiltered)
   updateFilteredList(arrayFiltered)
 }
 
-function getAllRegions (data) {
-  if ($criteriaWrapper.length) {
-    const groupRegions = _.mapValues(_.groupBy(data, 'assetRegion'))
-    const regionList = Object.keys(groupRegions)
+function updateFilteredList (arrayFiltered) {
+  $resultsListWrapper.empty()
 
-    regionList.unshift('All of the uk')
-    regionList.map((items, index) => {
-      $regionListWrapper.append(checkboxTpl(items, index))
+  const items = []
+
+  if (arrayFiltered.length) {
+    arrayFiltered.map((item, index) => {
+      items.push(item)
+      $resultsListWrapper.append(resultsListItemTpl(items, index))
     })
   }
+
+  $countWrapper.text(items.length)
 }
+
+/********* END: RESULT PAGE ***********/
 
 $(document).ready(function () {
   window.GOVUKFrontend.initAll()
-  getCheckboxOpts()
+
+  /**** Asset page ****/
   getAssetOpts()
   getProjectData()
+  assetInputs()
+
+  /**** Results page ****/
+  getAssetResultsData()
   checkboxes()
 
+  //getCheckboxOpts()
+  //getProjectData()
+
+  const $selectAssetType = $('#selectAssetType')
+
+  $selectAssetType.submit(function () {
+    const session = window.sessionStorage.getItem('app')
+
+    if (session) {
+
+    } else {
+      window.sessionStorage.setItem('app', JSON.stringify(appDataModel))
+    }
+  })
 })

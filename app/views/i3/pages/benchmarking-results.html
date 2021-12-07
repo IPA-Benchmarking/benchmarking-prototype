@@ -50,20 +50,16 @@ GOV.UK Prototype Kit
         </ul>
 
     </div>
-
-<!--    <div class="govuk-grid-column-one-quarter">-->
-<!--        <p>Filter by:</p>-->
-<!--    </div>-->
-
-<!--    <div class="govuk-grid-column-three-quarters">-->
-<!--        {% include "includes/filter-select.html" %}-->
-<!--    </div>-->
 </div>
 
 
 <div class="govuk-grid-row">
 
     <div class="govuk-grid-column-one-third">
+
+
+        <p>Filter by:</p>
+
 
         <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
             <div class="govuk-accordion__section govuk-accordion__section--expanded">
@@ -138,6 +134,14 @@ GOV.UK Prototype Kit
                     <p class='govuk-body'>This is the content for How people read.</p>
                 </div>
             </div>
+
+
+
+
+            <div class="govuk-grid-column-three-quarters">
+                {% include "includes/filter-select.html" %}
+            </div>
+
         </div>
     </div>
 
@@ -160,7 +164,6 @@ GOV.UK Prototype Kit
             <ul class="results-list"></ul>
         </div>
     </div>
-
 </div>
 
 {% endblock %}
