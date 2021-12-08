@@ -46,7 +46,7 @@ $(document).ready(function () {
 
   const evn = window.location.host
   const ipaConfig = {
-    url: 'https://ipamockapi.herokuapp.com/api',
+    url: evn.search('localhost') > -1 ? 'http://localhost:4041/api' : 'https://ipamockapi.herokuapp.com/api',
   }
 
   const getAppSessionData = window.sessionStorage.getItem('app')
@@ -294,6 +294,8 @@ $(document).ready(function () {
       $results.pagination({
         dataSource: projectData,
         pageSize: 10,
+        prevText: 'Previous',
+        nextText: 'Next',
         totalNumber: selectedAssetProjects.length,
         callback: function (data, pagination) {
           $currentResultsCount.html(pagination.pageSize)
@@ -415,5 +417,22 @@ $(document).ready(function () {
   //     window.sessionStorage.setItem('app', JSON.stringify(appDataModel))
   //   }
   // })
+
+  $(window).scroll(function () {
+    stickyNav()
+  })
+
+  const navbar = document.querySelector('.govuk-header')
+  const sticky = navbar.offsetHeight
+  const compareBar = document.querySelector('.compare-dataset')
+
+
+  function stickyNav () {
+    if (window.pageYOffset >= sticky) {
+      compareBar.classList.add('sticky')
+    } else {
+      compareBar.classList.remove('sticky')
+    }
+  }
 
 })

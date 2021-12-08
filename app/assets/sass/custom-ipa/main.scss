@@ -230,6 +230,10 @@
     padding: 20px 0;
     border-top:1px solid #B1B4B6;
     list-style: none;
+
+    &:last-child {
+        border-bottom:1px solid #B1B4B6;
+    }
 }
 
 .result-icons {
@@ -361,4 +365,28 @@
 .region-list{
     max-height: 210px;
     overflow-y: scroll;
+}
+
+.sticky{
+    position: fixed;
+    top:50px;
+    max-width: 960px;
+    width: 100%;
+    z-index: 100;
+}
+
+.paginationjs-pages {
+    ul {
+        list-style: none;
+        font-size: 20px;
+        margin: 20px 0 0;
+        padding: 0;
+        float: right;
+
+        li {
+            display: inline-block;
+            margin-right: 20px;
+        }
+    }
+
 }
