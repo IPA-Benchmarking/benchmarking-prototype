@@ -24,6 +24,9 @@ const toSqMetre = (length, width, cost) => {
     const result = l * w
     const m2 = cost / result
 
+    console.log('l', l)
+    console.log('w', w)
+
     return formatToFixed(m2)
   }
 }
@@ -43,7 +46,7 @@ $(document).ready(function () {
 
   const evn = window.location.host
   const ipaConfig = {
-    url: evn.search('localhost') > -1 ? 'http://localhost:4041/api' : 'https://ipamockapi.herokuapp.com/api',
+    url: 'https://ipamockapi.herokuapp.com/api',
   }
 
   const getAppSessionData = window.sessionStorage.getItem('app')
@@ -61,7 +64,7 @@ $(document).ready(function () {
 
   const projectsDataModel = []
   const paramArr = []
-  const itemsToCompare = []
+  let itemsToCompare = []
   const $resultsListWrapper = $('.results-list')
   const $resultPageWrapper = $('.results-page')
   const $countWrapper = $('.results-count')
@@ -70,6 +73,7 @@ $(document).ready(function () {
   const $projectCount = $('.project-count')
   const $assetTitle = $('.assetTitle')
   const $compareCount = $('.compare-count')
+  const $currentResultsCount = $('.current-results-count')
 
 // function averageCost () {
 //   console.log('averageCost', JSON.parse(session).selectedAssetProjects)
@@ -109,37 +113,35 @@ $(document).ready(function () {
   </div>`
   }
 
-  const resultsListItemTpl = (results, i) => {
-    const outturnCost = results[i].outturnCost
-    const length = results[i].length
-    const width = results[i].width
-    const volume = results[i].volume
+  const resultsListItemTpl = (results) => {
+
+    const { projectName, projectEndDate, assetRegion, projectID, outturnCost, length, width, volume} = results
 
     return `<li class="results-item">
-            <div class="result-head">
-                <div class="details">
-                    <p class="list-item-title"><a href="#">${results[i].projectName}</a></p>
-                </div>
-                <div class="details">
-                    <button class="govuk-button govuk-button--secondary addToCompare" data-compare-id="${results[i].projectID}" data-module="govuk-button">
-                        Add to dataset
-                    </button>
-                </div>
-            </div>
-            
-            <div class="result-icons">
-              <p class="icon calendar">Construction completion year: ${results[i].projectEndDate}</p>
-              <p class="icon pin"> Region: ${results[i].assetRegion}</p>
-            </div>
-            
-            <div class="result-costs">
-                <ul class="govuk-list result-costs-list">
-                    <li>Outturn cost <span class="result-figure">${formatToFixed(results[i].outturnCost)}</span></li>
-                    <li>Cost/m2 <span class="result-figure">${toSqMetre(length, width, outturnCost)}</span></li>
-                    <li>Cost/m3 <span class="result-figure">${toCubic(volume, outturnCost)}</span></li>
-                </ul>
-            </div>
-        </li>`
+              <div class="result-head">
+                  <div class="details">
+                      <p class="list-item-title"><a href="#">${projectName}</a></p>
+                  </div>
+                  <div class="details">
+                      <button class="govuk-button govuk-button--secondary addToCompare" data-compare-id="${projectID}" data-module="govuk-button">
+                          Add to dataset
+                      </button>
+                  </div>
+              </div>
+  
+              <div class="result-icons">
+                <p class="icon calendar">Construction completion year: ${projectEndDate}</p>
+                <p class="icon pin"> Region: ${assetRegion}</p>
+              </div>
+  
+              <div class="result-costs">
+                  <ul class="govuk-list result-costs-list">
+                      <li>Outturn cost <span class="result-figure">${formatToFixed(outturnCost)}</span></li>
+                      <li>Cost/m2 <span class="result-figure">${toSqMetre(length, width, outturnCost)}</span></li>
+                      <li>Cost/m3 <span class="result-figure">${toCubic(volume, outturnCost)}</span></li>
+                  </ul>
+              </div>
+          </li>`
   }
 
 
@@ -253,6 +255,11 @@ $(document).ready(function () {
 
   /********* START: RESULT PAGE ***********/
 
+  function setCountOnload () {
+    const { selectedAssetProjects } = appSession
+    $countWrapper.html(selectedAssetProjects.length)
+  }
+
   function getAllRegions (data) {
     if ($regionListWrapper.length) {
       const groupRegions = _.mapValues(_.groupBy(data, 'assetRegion'))
@@ -270,19 +277,31 @@ $(document).ready(function () {
       const getSession = window.sessionStorage.getItem('app')
       const session = JSON.parse(getSession)
       const { selectedAssetProjects, selectedAsset } = session
-      const data = selectedAssetProjects
+      const projectData = selectedAssetProjects
+      const $results = $('.results')
+      console.log('data Neil', selectedAssetProjects)
 
-      console.log('data Neil', selectedAssetProjects);
-
-      const items = []
+      //const items = []
       $assetTitle.html(selectedAsset.name)
 
-      if (data.length) {
-        data.map((item, index) => {
-          items.push(item)
-          $resultsListWrapper.append(resultsListItemTpl(items, index))
-        })
-      }
+      // if (projectData.length) {
+      //   projectData.map((item, index) => {
+      //     items.push(item)
+      //     //$resultsListWrapper.append(resultsListItemTpl(items, index))
+      //   })
+      // }
+
+      $results.pagination({
+        dataSource: projectData,
+        pageSize: 10,
+        totalNumber: selectedAssetProjects.length,
+        callback: function (data, pagination) {
+          $currentResultsCount.html(pagination.pageSize)
+          data.forEach(function (el, i) {
+            $resultsListWrapper.append(resultsListItemTpl(el, i))
+          })
+        }
+      })
     }
   }
 
@@ -350,52 +369,31 @@ $(document).ready(function () {
     const elem = $(this)
     const id = $(this).data('compare-id')
 
-    if (elem.hasClass('added')) {
-      elem.text('Add to dataset').removeClass('added')
+    if (elem.hasClass('remove')) {
+      elem.text('Add to dataset').removeClass('remove')
+      const removeId = itemsToCompare.filter(e => e.projectID !== id)
+      itemsToCompare = removeId
     } else {
-      elem.text('Remove').addClass('added')
+      elem.text('Remove').addClass('remove')
+      itemsToCompare.push({ projectID: id })
     }
 
-    // if (itemsToCompare.length > 1) {
-    //   itemsToCompare.map((item) => {
-    //     if (...item) {
-    //
-    //     }
-    //   });
-    // }
+    console.log('itemsToCompare', itemsToCompare)
 
-    itemsToCompare.push({ projectID: id })
+    const session = appSession
     $compareCount.html(itemsToCompare.length)
+    appDataModel.compareList = itemsToCompare
 
-    const { compareList } = appDataModel
-    compareList.push(...itemsToCompare)
+    session.compareList = itemsToCompare
+    window.sessionStorage.setItem('app', JSON.stringify(session))
 
-    const getSession = window.sessionStorage.getItem('app')
-    const session = JSON.parse(getSession)
+    console.log('ON CLICK ----- appSession', appSession)
+    console.log('ON CLICK ----- appDataModel', appDataModel)
 
-    //console.log('appSession', JSON.parse(session))
-
-    // window.sessionStorage.setItem('app', JSON.stringify(appDataModel))
-
-    //console.log('appSession', appSession)
-
-    // if (appSession) {
-    //   const appData = JSON.parse(appSession)
-    //
-    //   console.log('appData 11111', appData)
-    //
-    //   appData[compareList] = itemsToCompare
-    //   //window.sessionStorage.setItem('app', JSON.stringify(appDataModel))
-    //
-    // } else {
-    //   // window.sessionStorage.setItem('app', JSON.stringify(appDataModel))
-    // }
-    //
-    // console.log('appDataModel', appDataModel)
-    // // console.log('itemsToCompare', itemsToCompare)
   })
 
   /********* END: RESULT PAGE ***********/
+
 
   /**** Asset page ****/
   getAssetOpts()
@@ -405,6 +403,7 @@ $(document).ready(function () {
   /**** Results page ****/
   getAssetResultsData()
   onInput()
+  setCountOnload()
 
   //getCheckboxOpts()
   //getProjectData()

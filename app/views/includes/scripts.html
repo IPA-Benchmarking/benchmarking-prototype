@@ -3,12 +3,13 @@
 <script src="/public/javascripts/lodash.js"></script>
 <!--<script src="https://code.highcharts.com/highcharts.src.js"></script>-->
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-
+<script type="text/javascript" src="/public/javascripts/pagination.js"></script>
 {% for scriptUrl in extensionConfig.scripts %}
   <script src="{{scriptUrl}}"></script>
 {% endfor %}
 
 <script src="/public/javascripts/application.js"></script>
+<script src="/public/javascripts/ipa-charts.js"></script>
 
 {% if useAutoStoreData %}
   <script src="/public/javascripts/auto-store-data.js"></script>
