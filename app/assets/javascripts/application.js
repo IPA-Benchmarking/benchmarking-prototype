@@ -46,7 +46,7 @@ $(document).ready(function () {
 
   const evn = window.location.host
   const ipaConfig = {
-    url: evn.search('localhost') > -1 ? 'http://localhost:4041/api' : 'https://ipamockapi.herokuapp.com/api',
+    url: 'https://ipamockapi.herokuapp.com/api',
   }
 
   const getAppSessionData = window.sessionStorage.getItem('app')
