@@ -1,0 +1,241 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+GOV.UK Prototype Kit
+{% endblock %}
+
+{% block content %}
+
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+<div class="back-link-wrapper">
+    {{ govukBackLink({
+    text: "Back",
+    href: "benchmarking-asset"
+    }) }}
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl results-title">
+            Embankment 7
+        </h1>
+        <ul class="govuk-list util-bar">
+            <li>Cost data has been normalised to inflation in Q1 2020. </li>
+            <li class="download"><a class="govuk-link" href="#">Download data for this asset</a></li>
+        </ul>
+    </div>
+</div>
+
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third">
+        <div class="image-place-holder"><p>Location </p>
+            <p class="govuk-body govuk-!-font-size-24 govuk-!-font-weight-bold">North West, England</p>
+            <p>Purpose</p>
+            <p class="govuk-body govuk-!-font-size-24 govuk-!-font-weight-bold">Flood protection from fluvial</p>
+            <p>Standard of flood protection</p>
+            <p class="govuk-body govuk-!-font-size-24 govuk-!-font-weight-bold">1 in 100 years</p>
+            <p>Whole life cost</p>
+            <p class="govuk-body govuk-!-font-size-24 govuk-!-font-weight-bold">£xxx,xxx.xx</p>
+            <p>Moneitised benefit</p>
+            <p class="govuk-body govuk-!-font-size-24 govuk-!-font-weight-bold">£xxx,xxx.xx</p>
+        </div>
+    </div>
+
+    <div class="govuk-grid-column-two-thirds">
+
+        <table class="govuk-table">
+            <caption class="govuk-table__caption govuk-table__caption--m">Cost</caption>
+<!--            <thead class="govuk-table__head">-->
+<!--            <tr class="govuk-table__row">-->
+<!--                <th scope="col" class="govuk-table__header">Date</th>-->
+<!--                <th scope="col" class="govuk-table__header">Amount</th>-->
+<!--            </tr>-->
+<!--            </thead>-->
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Estimated cost</th>
+                <td class="govuk-table__cell">£109.80 per week</td>
+            </tr>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Outturn cost</th>
+                <td class="govuk-table__cell">£109.80 per week</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <table class="govuk-table">
+            <caption class="govuk-table__caption govuk-table__caption--m">Contract details</caption>
+<!--            <thead class="govuk-table__head">-->
+<!--            <tr class="govuk-table__row">-->
+<!--                <th scope="col" class="govuk-table__header">Date</th>-->
+<!--                <th scope="col" class="govuk-table__header">Amount</th>-->
+<!--            </tr>-->
+<!--            </thead>-->
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Sector</th>
+                <td class="govuk-table__cell">Public</td>
+            </tr>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Client</th>
+                <td class="govuk-table__cell">-</td>
+            </tr>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Work type</th>
+                <td class="govuk-table__cell">New construction</td>
+            </tr>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Procurement type</th>
+                <td class="govuk-table__cell">Framework: Design-bid-build</td>
+            </tr>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Form of construction contract</th>
+                <td class="govuk-table__cell">NEC Target Cost C or D</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <table class="govuk-table">
+            <caption class="govuk-table__caption govuk-table__caption--m">Project schedule</caption>
+<!--            <thead class="govuk-table__head">-->
+<!--            <tr class="govuk-table__row">-->
+<!--                <th scope="col" class="govuk-table__header">Date</th>-->
+<!--                <th scope="col" class="govuk-table__header">Amount</th>-->
+<!--            </tr>-->
+<!--            </thead>-->
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Project start year</th>
+                <td class="govuk-table__cell">2018</td>
+            </tr>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Project end year</th>
+                <td class="govuk-table__cell">2018</td>
+            </tr>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Project duration</th>
+                <td class="govuk-table__cell">15 weeks </td>
+            </tr>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Construction duration</th>
+                <td class="govuk-table__cell">8 weeks</td>
+            </tr>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Status</th>
+                <td class="govuk-table__cell">Complete</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <table class="govuk-table">
+            <caption class="govuk-table__caption govuk-table__caption--m">Construction measurements</caption>
+<!--            <thead class="govuk-table__head">-->
+<!--            <tr class="govuk-table__row">-->
+<!--                <th scope="col" class="govuk-table__header">Date</th>-->
+<!--                <th scope="col" class="govuk-table__header">Amount</th>-->
+<!--            </tr>-->
+<!--            </thead>-->
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Width</th>
+                    <td class="govuk-table__cell">1.00m</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Length</th>
+                    <td class="govuk-table__cell">132.00m</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Height</th>
+                    <td class="govuk-table__cell">40.15m</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Volume</th>
+                    <td class="govuk-table__cell">53m3</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Width of footprint</th>
+                    <td class="govuk-table__cell">2.5m</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Toe-in depth (below finished ground level)</th>
+                    <td class="govuk-table__cell">2m</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Weight of fill</th>
+                    <td class="govuk-table__cell">6746.4ton</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Average depth to ground water table</th>
+                    <td class="govuk-table__cell">N/A</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="govuk-table">
+            <caption class="govuk-table__caption govuk-table__caption--m">Construction features</caption>
+<!--            <thead class="govuk-table__head">-->
+<!--            <tr class="govuk-table__row">-->
+<!--                <th scope="col" class="govuk-table__header">Date</th>-->
+<!--                <th scope="col" class="govuk-table__header">Amount</th>-->
+<!--            </tr>-->
+<!--            </thead>-->
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Ground type</th>
+                    <td class="govuk-table__cell">Soft</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Material</th>
+                    <td class="govuk-table__cell">Cement</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Primary material type</th>
+                    <td class="govuk-table__cell">Soil - Cohesive</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Secondary material type</th>
+                    <td class="govuk-table__cell">Soil - Granular </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Core material </th>
+                    <td class="govuk-table__cell">Soil - Cohesive</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Sheet pile cut off </th>
+                    <td class="govuk-table__cell">No</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Utility Diversions</th>
+                    <td class="govuk-table__cell">No</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Utilities crossing embankment</th>
+                    <td class="govuk-table__cell">No</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Access through embankment</th>
+                    <td class="govuk-table__cell">No</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Distance from source site</th>
+                    <td class="govuk-table__cell">30km</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Crest access track</th>
+                    <td class="govuk-table__cell">No</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">Toe drain</th>
+                    <td class="govuk-table__cell">Yes</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+
+
+{% endblock %}

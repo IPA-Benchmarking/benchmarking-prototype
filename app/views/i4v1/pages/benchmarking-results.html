@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+GOV.UK Prototype Kit
+{% endblock %}
+
+{% block content %}
+
+<!--<div class="govuk-grid-row">-->
+<!--    <div class="govuk-grid-column-full">-->
+<!--        <div class="compare-dataset">-->
+<!--            <div class="compare left">-->
+<!--                <p>-->
+<!--                    <strong>Showing <span class="results-count">0</span> matching results</strong>-->
+<!--                </p>-->
+<!--                <p>-->
+<!--                    <strong>-->
+<!--                        <span class="compare-count">0</span>-->
+<!--                    </strong> added to dataset comparison-->
+<!--                </p>-->
+<!--            </div>-->
+
+<!--            <div class="compare right">-->
+<!--                <button class="govuk-button" data-module="govuk-button">-->
+<!--                    Compare dataset-->
+<!--                </button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+<div class="back-link-wrapper">
+    {{ govukBackLink({
+    text: "Back to asset type",
+    href: "benchmarking-asset"
+    }) }}
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl results-title">
+            <span class="text-placeholder assetTitle">###ASSETTYPE###</span> assets data
+        </h1>
+    </div>
+</div>
+
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <ul class="govuk-list util-bar">
+            <li><strong><span class="results-count">0</span></strong> <span class="text-placeholder assetTitle">###ASSETTYPE###</span> assets are available to match</li>
+            <li class="download"><a class="govuk-link" href="#">Download CSV</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="govuk-grid-row results-page">
+
+    <div class="govuk-grid-column-one-third">
+        <p>Filter by:</p>
+        {% include "includes/accordion.html" %}
+        {% include "includes/filter-select.html" %}
+    </div>
+
+    <div class="govuk-grid-column-two-thirds">
+        <h2 class="govuk-heading-l">Cost data </h2>
+        <div class="graph-wrapper">
+            <div class="graph">
+                {% include "includes/tabs-results-page.html" %}
+            </div>
+            <div class="graph">
+                <p>The outturn cost of a project is the final construction cost of the asset. These have been normalised for inflation at Q12021.</p>
+                <p>These asset outturn costs range between <strong>£xxx</strong> and <strong>£xxx</strong>.</p>
+            </div>
+            <div class="ipa-data-table"></div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

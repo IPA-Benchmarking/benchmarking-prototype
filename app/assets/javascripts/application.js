@@ -46,7 +46,7 @@ $(document).ready(function () {
 
   const evn = window.location.host
   const ipaConfig = {
-    url: 'https://ipamockapi.herokuapp.com/api',
+    url: evn.search('localhost') > -1 ? 'http://localhost:4041/api' : 'https://ipamockapi.herokuapp.com/api',
   }
 
   const getAppSessionData = window.sessionStorage.getItem('app')
@@ -59,7 +59,8 @@ $(document).ready(function () {
     assetArray: [],
     appData: [],
     selectedAssetProjects: [],
-    compareList: []
+    compareList: [],
+    currentFilterData: [],
   }
 
   const projectsDataModel = []
@@ -82,11 +83,11 @@ $(document).ready(function () {
 //   console.log('average', average)
 // }
 
-  const assetGroups = (section) => {
-    const name = _.startCase(_.toLower(section))
-    const id = _.camelCase(section)
-    return `<section id="${id}" class="${id} sectors"><h3 class="govuk-heading-m">${name}</h3></section>`
-  }
+  // const assetGroups = (section) => {
+  //   const name = _.startCase(_.toLower(section))
+  //   const id = _.camelCase(section)
+  //   return `<section id="${id}" class="${id} sectors"><h3 class="govuk-heading-m">${name}</h3></section>`
+  // }
 
   const radiobuttonTpl = (items) => {
     const type = _.camelCase(items.type) || _.camelCase(items)
@@ -174,8 +175,9 @@ $(document).ready(function () {
         Object.keys(groupSectors).forEach(function (key) {
           const sectorArr = groupSectors[key]
           const keyToCamelcase = _.camelCase(key)
-          $assetSectionWrapper.append(assetGroups(key))
+          //$assetSectionWrapper.append(assetGroups(key))
           sectorArr.forEach(function (arr, i) {
+            console.log(keyToCamelcase)
             $('#' + keyToCamelcase).append(radiobuttonTpl(arr, i))
           })
         })
@@ -185,7 +187,7 @@ $(document).ready(function () {
 
   function setAssetOpts () {
     if ($assetSectionWrapper.length) {
-      const elem = $assetSectionWrapper.find('input:checked')
+      const elem = $assetSectionWrapper.find('input[name="projectTypeID"]:checked')
       const value = elem.val()
       const prop = elem.attr('name')
       const name = elem.data('asset-name')
@@ -212,8 +214,6 @@ $(document).ready(function () {
       const property = projectTypeID.length ? Object.keys(...projectTypeID) : []
       let filterData = []
 
-      console.log()
-
       filterData = appData.filter(el => {
         return projectTypeID.some(filter => {
           return filter[property] === el[property]
@@ -235,7 +235,7 @@ $(document).ready(function () {
   }
 
   function assetInputs () {
-    $assetSectionWrapper.on('change', 'input', function (event) {
+    $assetSectionWrapper.on('change', 'input[name="projectTypeID"]', function (event) {
       const input = $(this)
       const value = input.val()
       const prop = input.attr('name')
@@ -245,6 +245,8 @@ $(document).ready(function () {
 
       selectedAsset.name = value
       selectedAsset.type = name
+
+      console.log('yes...')
 
       selectedAssetArr.push({ [`${prop}`]: value })
       getAssetData(event, selectedAssetArr)
@@ -279,9 +281,8 @@ $(document).ready(function () {
       const { selectedAssetProjects, selectedAsset } = session
       const projectData = selectedAssetProjects
       const $results = $('.results')
-      console.log('data Neil', selectedAssetProjects)
-
       //const items = []
+
       $assetTitle.html(selectedAsset.name)
 
       // if (projectData.length) {
@@ -290,20 +291,21 @@ $(document).ready(function () {
       //     //$resultsListWrapper.append(resultsListItemTpl(items, index))
       //   })
       // }
-
-      $results.pagination({
-        dataSource: projectData,
-        pageSize: 10,
-        prevText: 'Previous',
-        nextText: 'Next',
-        totalNumber: selectedAssetProjects.length,
-        callback: function (data, pagination) {
-          $currentResultsCount.html(pagination.pageSize)
-          data.forEach(function (el, i) {
-            $resultsListWrapper.append(resultsListItemTpl(el, i))
-          })
-        }
-      })
+      if ($results.length) {
+        $results.pagination({
+          dataSource: projectData,
+          pageSize: 10,
+          prevText: 'Previous',
+          nextText: 'Next',
+          totalNumber: selectedAssetProjects.length,
+          callback: function (data, pagination) {
+            $currentResultsCount.html(pagination.pageSize)
+            data.forEach(function (el, i) {
+              $resultsListWrapper.append(resultsListItemTpl(el, i))
+            })
+          }
+        })
+      }
     }
   }
 
@@ -426,13 +428,16 @@ $(document).ready(function () {
   const sticky = navbar.offsetHeight
   const compareBar = document.querySelector('.compare-dataset')
 
-
   function stickyNav () {
-    if (window.pageYOffset >= sticky) {
-      compareBar.classList.add('sticky')
-    } else {
-      compareBar.classList.remove('sticky')
+    if (compareBar) {
+      if (window.pageYOffset >= sticky) {
+        compareBar.classList.add('sticky')
+      } else {
+        compareBar.classList.remove('sticky')
+      }
     }
   }
+
+
 
 })
