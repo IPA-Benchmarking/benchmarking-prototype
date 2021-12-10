@@ -49,20 +49,6 @@ $(document).ready(function () {
     url: evn.search('localhost') > -1 ? 'http://localhost:4041/api' : 'https://ipamockapi.herokuapp.com/api',
   }
 
-  const getAppSessionData = window.sessionStorage.getItem('app')
-  const appSession = JSON.parse(getAppSessionData)
-
-  console.log('ON LOAD ----- appSession', appSession)
-
-  const appDataModel = {
-    selectedAsset: { name: '', type: '' },
-    assetArray: [],
-    appData: [],
-    selectedAssetProjects: [],
-    compareList: [],
-    currentFilterData: [],
-  }
-
   const projectsDataModel = []
   const paramArr = []
   let itemsToCompare = []
@@ -75,19 +61,24 @@ $(document).ready(function () {
   const $assetTitle = $('.assetTitle')
   const $compareCount = $('.compare-count')
   const $currentResultsCount = $('.current-results-count')
+  const $costTable = $('.cost-table')
 
-// function averageCost () {
-//   console.log('averageCost', JSON.parse(session).selectedAssetProjects)
-//   const array =  JSON.parse(session).selectedAssetProjects
-//   const average = array => arr.reduce((a, b) => a + b, 0) / arr.length
-//   console.log('average', average)
-// }
+  const getAppSessionData = window.sessionStorage.getItem('app')
+  const appSession = JSON.parse(getAppSessionData)
 
-  // const assetGroups = (section) => {
-  //   const name = _.startCase(_.toLower(section))
-  //   const id = _.camelCase(section)
-  //   return `<section id="${id}" class="${id} sectors"><h3 class="govuk-heading-m">${name}</h3></section>`
-  // }
+  console.log('ON LOAD ----- appSession', appSession)
+
+  const appDataModel = {
+    selectedAsset: { name: '', type: '' },
+    assetArray: [],
+    appData: [],
+    selectedAssetProjects: !_.isNull(appSession) && appSession.selectedAssetProjects ? appSession.selectedAssetProjects : [],
+    compareList: [],
+    currentFilterData: []
+  }
+
+  //console.log('selectedAssetProjects', appSession.selectedAssetProjects)
+
 
   const radiobuttonTpl = (items) => {
     const type = _.camelCase(items.type) || _.camelCase(items)
@@ -101,22 +92,24 @@ $(document).ready(function () {
            </div>`
   }
 
-  const checkboxTpl = (items, i) => {
-    const inputId = items.isArray && $regionListWrapper.length === 0 ? _.camelCase(items[i].text) : _.camelCase(items)
-    const inputVal = items.isArray && $regionListWrapper.length === 0 ? _.camelCase(items[i].value) : _.camelCase(items)
+  const checkboxTpl = (items, i, property) => {
+    const name = _.camelCase(items)
+    console.log('items', name)
 
-    return `<div class="govuk-checkboxes" data-module="govuk-checkboxes">
-  <div class="govuk-checkboxes__item">
-    <input class="govuk-checkboxes__input" id="${inputId}" name="projectTypeID" type="checkbox" value="${inputVal}">
-    <label class="govuk-label govuk-checkboxes__label" for="${inputId}">
-      ${items.isArray ? items[i].text : items}
-    </label>
-  </div>`
+    // const inputId = items.isArray && $regionListWrapper.length === 0 ? _.camelCase(items[i].text) : _.camelCase(items)
+    // const inputVal = items.isArray && $regionListWrapper.length === 0 ? _.camelCase(items[i].value) : _.camelCase(items)
+
+    return `<div class="govuk-checkboxes__item">
+                <input class="govuk-checkboxes__input" id="${name}" name="${property}" type="checkbox" value="${name}">
+                <label class="govuk-label govuk-checkboxes__label" for="${name}">
+                  ${items}
+                </label>
+             </div>`
   }
 
   const resultsListItemTpl = (results) => {
 
-    const { projectName, projectEndDate, assetRegion, projectID, outturnCost, length, width, volume} = results
+    const { projectName, projectEndDate, assetRegion, projectID, outturnCost, length, width, volume } = results
 
     return `<li class="results-item">
               <div class="result-head">
@@ -145,7 +138,29 @@ $(document).ready(function () {
           </li>`
   }
 
+  const costTableTpl = (asset) => {
+    const { projectName, length, height, width, outturnCost, volume } = asset
 
+    return `<tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header"><a class="asset-details" href="benchmarking-asset-detail">${projectName}</a></th>
+                <td class="govuk-table__cell">${length}</td>
+                <td class="govuk-table__cell">${height}</td>
+                <td class="govuk-table__cell">${toSqMetre(length, width, outturnCost)}</td>
+                <td class="govuk-table__cell">${formatToFixed(volume, outturnCost)}</td>
+                <td class="govuk-table__cell">${formatToFixed(outturnCost)}</td>
+            </tr>`
+  }
+
+  const projectScheduleTpl = (asset) => {
+    const { projectName, duration_of_build_weeks } = asset
+    const num = parseFloat(duration_of_build_weeks).toFixed(0)
+
+    return `<tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header"><a class="asset-details" href="benchmarking-asset-detail">${projectName}</a></th>
+                <td class="govuk-table__cell">N/A</td>
+                <td class="govuk-table__cell">${num} weeks</td>
+            </tr>`
+  }
 
   function getProjectData () {
     const params = { page: 1, limit: 10 }
@@ -266,10 +281,11 @@ $(document).ready(function () {
     if ($regionListWrapper.length) {
       const groupRegions = _.mapValues(_.groupBy(data, 'assetRegion'))
       const regionList = Object.keys(groupRegions)
+      const property = 'assetRegion'
 
       regionList.unshift('All of the uk')
       regionList.map((items, index) => {
-        $regionListWrapper.append(checkboxTpl(items, index))
+        $regionListWrapper.append(checkboxTpl(items, index, property))
       })
     }
   }
@@ -396,6 +412,42 @@ $(document).ready(function () {
 
   })
 
+  function createAssetTables () {
+    console.log(appDataModel)
+
+    const assetData = appDataModel ? appDataModel.selectedAssetProjects : []
+
+    console.log('assetData', assetData)
+
+    // if ($('.ipa-data-table').length) {}
+    $('.cost-data-table').pagination({
+      dataSource: assetData,
+      pageSize: 10,
+      prevText: 'Previous',
+      nextText: 'Next',
+      totalNumber: assetData.length,
+      callback: function (data, pagination) {
+        data.forEach(function (el) {
+          $costTable.append($costTable.append(costTableTpl(el)))
+        })
+      }
+    })
+
+    $('.project-schedule-data-table').pagination({
+      dataSource: assetData,
+      pageSize: 10,
+      prevText: 'Previous',
+      nextText: 'Next',
+      totalNumber: assetData.length,
+      callback: function (data, pagination) {
+        data.forEach(function (el) {
+          $('.project-schedule').append(projectScheduleTpl(el))
+        })
+      }
+    })
+
+  }
+
   /********* END: RESULT PAGE ***********/
 
 
@@ -404,10 +456,12 @@ $(document).ready(function () {
   getProjectData()
   assetInputs()
 
+
   /**** Results page ****/
   getAssetResultsData()
   onInput()
   setCountOnload()
+  createAssetTables()
 
   //getCheckboxOpts()
   //getProjectData()

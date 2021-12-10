@@ -3,7 +3,7 @@ if (document.getElementById('chart_div')) {
   google.charts.setOnLoadCallback(drawChart)
 
   function drawChart () {
-    var data = google.visualization.arrayToDataTable([
+    const data = google.visualization.arrayToDataTable([
       ['Age', 'Weight'],
       [8, 12],
       [4, 5.5],
@@ -20,7 +20,7 @@ if (document.getElementById('chart_div')) {
       legend: 'none'
     }
 
-    var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'))
+    const chart = new google.visualization.ScatterChart(document.getElementById('chart_div'))
 
     chart.draw(data, options)
   }

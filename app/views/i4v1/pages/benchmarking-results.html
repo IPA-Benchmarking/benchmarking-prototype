@@ -65,16 +65,65 @@ GOV.UK Prototype Kit
     </div>
 
     <div class="govuk-grid-column-two-thirds">
-        <h2 class="govuk-heading-l">Cost data </h2>
+        <h2 class="govuk-heading-l">Cost data</h2>
         <div class="graph-wrapper">
             <div class="graph">
                 {% include "includes/tabs-results-page.html" %}
             </div>
-            <div class="graph">
+            <div class="graph-details">
                 <p>The outturn cost of a project is the final construction cost of the asset. These have been normalised for inflation at Q12021.</p>
-                <p>These asset outturn costs range between <strong>£xxx</strong> and <strong>£xxx</strong>.</p>
+
+                <details class="govuk-details" data-module="govuk-details">
+                    <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">
+                      What’s included and excluded
+                    </span>
+                    </summary>
+                    <div class="govuk-details__text"></div>
+                </details>
             </div>
-            <div class="ipa-data-table"></div>
+
+            <div class="ipa-data-table cost-data-table">
+                <table class="govuk-table">
+                    <caption class="govuk-table__caption govuk-table__caption--m govuk-visually-hidden">Cost data</caption>
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col" class="govuk-table__header app-custom-class">Asset</th>
+                            <th scope="col" class="govuk-table__header app-custom-class">Length</th>
+                            <th scope="col" class="govuk-table__header app-custom-class">Height</th>
+                            <th scope="col" class="govuk-table__header app-custom-class">Cost/m2</th>
+                            <th scope="col" class="govuk-table__header app-custom-class">Cost/m3</th>
+                            <th scope="col" class="govuk-table__header app-custom-class">Outturn cost</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body cost-table">
+                    </tbody>
+                </table>
+            </div>
+
+            <hr class="govuk-section-break govuk-section-break--visible" style="margin: 20px 0 30px;">
+
+            <h2 class="govuk-heading-l">Project schedule </h2>
+
+
+            <div class="graph-wrapper">
+                <div class="ipa-data-table project-schedule-data-table">
+                    <table class="govuk-table">
+                        <caption class="govuk-table__caption govuk-table__caption--m govuk-visually-hidden">Cost data</caption>
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col" class="govuk-table__header app-custom-class">Asset</th>
+                            <th scope="col" class="govuk-table__header app-custom-class">Project duration</th>
+                            <th scope="col" class="govuk-table__header app-custom-class">Construction duration</th>
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body project-schedule">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <hr class="govuk-section-break govuk-section-break--visible" style="margin: 20px 0 30px;">
         </div>
     </div>
 </div>
