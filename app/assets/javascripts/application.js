@@ -24,9 +24,6 @@ const toSqMetre = (length, width, cost) => {
     const result = l * w
     const m2 = cost / result
 
-    console.log('l', l)
-    console.log('w', w)
-
     return formatToFixed(m2)
   }
 }
@@ -44,9 +41,9 @@ const toCubic = (volume, cost) => {
 $(document).ready(function () {
   window.GOVUKFrontend.initAll()
 
-  const evn = window.location.host
+  // const evn = window.location.host
   const ipaConfig = {
-    url: 'https://ipamockapi.herokuapp.com/api',
+    url: 'https://ipamockapi.herokuapp.com/api'
   }
 
   const projectsDataModel = []
@@ -62,6 +59,8 @@ $(document).ready(function () {
   const $compareCount = $('.compare-count')
   const $currentResultsCount = $('.current-results-count')
   const $costTable = $('.cost-table')
+  const $results = $('.results')
+  const $projectScheduleTable = $('.project-schedule')
 
   const getAppSessionData = window.sessionStorage.getItem('app')
   const appSession = JSON.parse(getAppSessionData)
@@ -77,9 +76,6 @@ $(document).ready(function () {
     currentFilterData: []
   }
 
-  //console.log('selectedAssetProjects', appSession.selectedAssetProjects)
-
-
   const radiobuttonTpl = (items) => {
     const type = _.camelCase(items.type) || _.camelCase(items)
     const isChecked = items.id === '2' ? 'checked' : ''
@@ -94,7 +90,7 @@ $(document).ready(function () {
 
   const checkboxTpl = (items, i, property) => {
     const name = _.camelCase(items)
-    console.log('items', name)
+    const mapName = _.startCase(items)
 
     // const inputId = items.isArray && $regionListWrapper.length === 0 ? _.camelCase(items[i].text) : _.camelCase(items)
     // const inputVal = items.isArray && $regionListWrapper.length === 0 ? _.camelCase(items[i].value) : _.camelCase(items)
@@ -102,7 +98,7 @@ $(document).ready(function () {
     return `<div class="govuk-checkboxes__item">
                 <input class="govuk-checkboxes__input" id="${name}" name="${property}" type="checkbox" value="${name}">
                 <label class="govuk-label govuk-checkboxes__label" for="${name}">
-                  ${items}
+                  ${mapName}
                 </label>
              </div>`
   }
@@ -165,7 +161,7 @@ $(document).ready(function () {
   function getProjectData () {
     const params = { page: 1, limit: 10 }
 
-    $.get(`${ipaConfig.url}/projects`, params, function (data) {
+    $.get(`${ipaConfig.url}/projects`, function (data) {
       const dataModel = data
       projectsDataModel.push(...dataModel)
     }).done((data) => {
@@ -192,7 +188,7 @@ $(document).ready(function () {
           const keyToCamelcase = _.camelCase(key)
           //$assetSectionWrapper.append(assetGroups(key))
           sectorArr.forEach(function (arr, i) {
-            console.log(keyToCamelcase)
+            // console.log(keyToCamelcase)
             $('#' + keyToCamelcase).append(radiobuttonTpl(arr, i))
           })
         })
@@ -235,17 +231,19 @@ $(document).ready(function () {
         })
       })
 
+      console.log('filterData', filterData)
+
       // console.log('appDataModel', appDataModel)
       const { selectedAssetProjects, assetArray } = appDataModel
       // console.log('selectedAssetProjects', selectedAssetProjects)
       // console.log('filterData', filterData)
 
       assetArray.push(...currentAsset)
-      selectedAssetProjects.push(...filterData)
+      appDataModel.selectedAssetProjects = filterData
       $projectCount.html(filterData.length)
 
       window.sessionStorage.setItem('app', JSON.stringify(appDataModel))
-      console.log('filterData', filterData)
+      // console.log('filterData', filterData)
     }
   }
 
@@ -273,14 +271,16 @@ $(document).ready(function () {
   /********* START: RESULT PAGE ***********/
 
   function setCountOnload () {
-    const { selectedAssetProjects } = appSession
-    $countWrapper.html(selectedAssetProjects.length)
+    if (getAssetResultsData.length) {
+      const { selectedAssetProjects } = appSession
+      $countWrapper.html(selectedAssetProjects.length)
+    }
   }
 
   function getAllRegions (data) {
     if ($regionListWrapper.length) {
       const groupRegions = _.mapValues(_.groupBy(data, 'assetRegion'))
-      const regionList = Object.keys(groupRegions)
+      const regionList = Object.keys(groupRegions).sort()
       const property = 'assetRegion'
 
       regionList.unshift('All of the uk')
@@ -296,7 +296,6 @@ $(document).ready(function () {
       const session = JSON.parse(getSession)
       const { selectedAssetProjects, selectedAsset } = session
       const projectData = selectedAssetProjects
-      const $results = $('.results')
       //const items = []
 
       $assetTitle.html(selectedAsset.name)
@@ -354,7 +353,10 @@ $(document).ready(function () {
   }
 
   function onFilter (filterOpts, property) {
-    const data = projectsDataModel
+    const getSession = window.sessionStorage.getItem('app')
+    const session = JSON.parse(getSession)
+    const { selectedAssetProjects } = session
+    const data = selectedAssetProjects
     const opts = filterOpts.length > 0 ? filterOpts : data
 
     console.log('filterOpts', filterOpts)
@@ -364,8 +366,13 @@ $(document).ready(function () {
         return filter[property] === el[property]
       })
     })
+
+
     console.log('arrayFiltered', arrayFiltered)
     updateFilteredList(arrayFiltered)
+    createAssetTables(arrayFiltered)
+    appDataModel.selectedAssetProjects = arrayFiltered
+    window.sessionStorage.setItem('app', JSON.stringify(appDataModel))
   }
 
   function updateFilteredList (arrayFiltered) {
@@ -412,40 +419,50 @@ $(document).ready(function () {
 
   })
 
-  function createAssetTables () {
-    console.log(appDataModel)
+  function createAssetTables (filter) {
+    if ($('.ipa-data-table').length) {
+      console.log(appDataModel)
+      console.log('results page')
+      const assetData = appDataModel ? appDataModel.selectedAssetProjects : []
+      const filterData = _.isUndefined(filter) ? assetData : filter
 
-    const assetData = appDataModel ? appDataModel.selectedAssetProjects : []
+      console.log('filter', _.isUndefined(filter))
 
-    console.log('assetData', assetData)
+      // const data = filteredData || assetData
 
-    // if ($('.ipa-data-table').length) {}
-    $('.cost-data-table').pagination({
-      dataSource: assetData,
-      pageSize: 10,
-      prevText: 'Previous',
-      nextText: 'Next',
-      totalNumber: assetData.length,
-      callback: function (data, pagination) {
-        data.forEach(function (el) {
-          $costTable.append($costTable.append(costTableTpl(el)))
-        })
-      }
-    })
+      console.log('assetData', assetData)
 
-    $('.project-schedule-data-table').pagination({
-      dataSource: assetData,
-      pageSize: 10,
-      prevText: 'Previous',
-      nextText: 'Next',
-      totalNumber: assetData.length,
-      callback: function (data, pagination) {
-        data.forEach(function (el) {
-          $('.project-schedule').append(projectScheduleTpl(el))
-        })
-      }
-    })
+      $('.cost-data-table').pagination({
+        dataSource: filterData,
+        pageSize: 10,
+        prevText: 'Previous',
+        nextText: 'Next',
+        totalNumber: filterData.length,
+        callback: function (data, pagination) {
+          console.log('pagination', pagination)
+          $costTable.empty()
+          data.forEach(function (el) {
+            $costTable.append(costTableTpl(el))
+          })
+        }
+      })
 
+
+
+      // $('.project-schedule-data-table').pagination({
+      //   dataSource: assetData,
+      //   pageSize: 10,
+      //   prevText: 'Previous',
+      //   nextText: 'Next',
+      //   totalNumber: assetData.length,
+      //   callback: function (data, pagination) {
+      //     data.forEach(function (el) {
+      //       $projectScheduleTable.empty()
+      //       $projectScheduleTable.append(projectScheduleTpl(el))
+      //     })
+      //   }
+      // })
+    }
   }
 
   /********* END: RESULT PAGE ***********/
