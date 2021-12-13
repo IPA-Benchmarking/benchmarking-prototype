@@ -4,6 +4,14 @@
 GOV.UK Prototype Kit
 {% endblock %}
 
+{% block beforeContent %}
+{{ govukBackLink({
+text: "Back",
+href: "benchmarking-asset"
+}) }}
+{% endblock %}
+
+
 {% block content %}
 
 <!--<div class="govuk-grid-row">-->
@@ -28,15 +36,6 @@ GOV.UK Prototype Kit
 <!--        </div>-->
 <!--    </div>-->
 <!--</div>-->
-
-{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-
-<div class="back-link-wrapper">
-    {{ govukBackLink({
-    text: "Back to asset type",
-    href: "benchmarking-asset"
-    }) }}
-</div>
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
@@ -105,6 +104,40 @@ GOV.UK Prototype Kit
 
             <h2 class="govuk-heading-l">Project schedule </h2>
 
+            <div class="graph-wrapper">
+                <div class="graph">
+                    <div class="image-wrapper">
+                        <p class="graph-caption govuk-!-font-size-24">Project durations and cost per week</p>
+                        <image src="../../../public/images/graph.png" alt="Bar chart showing project duration and cost per week" />
+                    </div>
+                </div>
+                <div class="graph-details">
+
+
+                    <div class="figures">
+                        <div class="figures-data">
+                            <p class="bold-figures">19 weeks</p>
+                            <p>Ave. project durantion</p>
+                        </div>
+                        <div class="figures-data">
+                            <p class="bold-figures">15 weeks</p>
+                            <p>Ave. construction duration</p>
+                        </div>
+                        <div class="figures-data">
+                            <p class="bold-figures">£23k</p>
+                            <p>Ave. cost per week</p>
+                        </div>
+                    </div>
+                    <p>This graph shows the construction duration for embankment assets. </p>
+                    <details class="govuk-details" data-module="govuk-details">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">
+                                What’s included and excluded
+                            </span>
+                        </summary>
+                        <div class="govuk-details__text"></div>
+                    </details>
+                </div>
 
             <div class="graph-wrapper">
                 <div class="ipa-data-table project-schedule-data-table">

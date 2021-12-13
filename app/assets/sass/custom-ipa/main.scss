@@ -377,6 +377,7 @@
         background-color:#144E81;
         border: 1px solid #B1B4B6;
         padding: 20px;
+        margin-bottom: 30px;
 
         p {
             color: #fff;
@@ -394,8 +395,18 @@
 
     .graph {
         margin-top: 40px;
-        margin-bottom: 30px;
+        //margin-bottom: 30px;
+
+        .image-wrapper {
+            border: 1px solid #B1B4B6;
+        }
     }
+}
+
+.graph-caption {
+    margin-left: 20px;
+    margin-top: 30px;
+    margin-bottom: 0;
 }
 
 .project-count-wrapper {
@@ -453,6 +464,25 @@
     margin-bottom: 120px;
 }
 
+.govuk-table {
+    font-size: 15px;
+    tr:nth-child(even) {
+        background-color: #e5e5e5;
+    }
+}
+
+.govuk-table__header,
 .govuk-table__cell {
-    text-align: center;
+    text-align: left;
+    padding: 10px;
+}
+
+.assetTitle{
+    text-transform: capitalize;
+}
+
+.util-bar {
+    .assetTitle {
+        text-transform: lowercase;
+    }
 }

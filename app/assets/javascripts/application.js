@@ -13,7 +13,7 @@ if (window.location.search && $('.results').length) {
 
 const formatToFixed = (number) => {
   let num = number
-  num = parseFloat(num).toFixed(0)
+  num = parseFloat(num).toFixed(2)
   return `£${Number(num).toLocaleString('en')}`
 }
 
@@ -61,6 +61,7 @@ $(document).ready(function () {
   const $costTable = $('.cost-table')
   const $results = $('.results')
   const $projectScheduleTable = $('.project-schedule')
+  const $average = $('.average')
 
   const getAppSessionData = window.sessionStorage.getItem('app')
   const appSession = JSON.parse(getAppSessionData)
@@ -161,11 +162,11 @@ $(document).ready(function () {
   const average = arr => arr.reduce((a, b) => a + b, 0) / arr.length
 
   function getProjectData () {
-    const params = { page: 1, limit: 10 }
+    // const params = { page: 1, limit: 10 }
 
     $.get(`${ipaConfig.url}/projects`, function (data) {
-      const dataModel = data
-      projectsDataModel.push(...dataModel)
+      // const dataModel = data
+      // projectsDataModel.push(...dataModel)
     }).done((data) => {
       // console.log('getProjectData', data)
       const { appData } = appDataModel
@@ -273,7 +274,7 @@ $(document).ready(function () {
   /********* START: RESULT PAGE ***********/
 
   function setCountOnload () {
-    if (getAssetResultsData.length) {
+    if ($countWrapper.length) {
       const { selectedAssetProjects } = appSession
       $countWrapper.html(selectedAssetProjects.length)
     }
@@ -298,9 +299,10 @@ $(document).ready(function () {
       const session = JSON.parse(getSession)
       const { selectedAssetProjects, selectedAsset } = session
       const projectData = selectedAssetProjects
+      const assetName = selectedAsset.name.slice(0, -1)
       //const items = []
 
-      $assetTitle.html(selectedAsset.name)
+      $assetTitle.html(assetName)
 
       // if (projectData.length) {
       //   projectData.map((item, index) => {
@@ -421,33 +423,63 @@ $(document).ready(function () {
 
   })
 
+  const mode = (arr) => {
+    if (arr.length) {
+      return arr.sort((a, b) =>
+        arr.filter(v => v === a).length
+        - arr.filter(v => v === b).length
+      ).pop()
+    }
+  }
+
+  const median = (array) => {
+    if (array.length) {
+      array = array.sort()
+
+      if (array.length % 2 === 0) { // array with even number elements
+        return (array[array.length / 2] + array[(array.length / 2) - 1]) / 2
+      } else {
+        return array[(array.length - 1) / 2] // array with odd number elements
+      }
+    }
+  }
+
   function setAverage () {
     const { selectedAssetProjects } = appDataModel
-    const test = []
+    const metreSq = []
 
-    selectedAssetProjects.map(asset => {
+    selectedAssetProjects.forEach(asset => {
       const { length, width, outturnCost } = asset
       const result = toSqMetre(length, width, outturnCost, true)
-      test.push(result)
-      return result
-    })
-    const $average = $('.average')
+      metreSq.push(result)
 
-    $average.text(formatToFixed(average(test)))
+    })
+
+    $average.text(formatToFixed(average(metreSq)))
+    setMean(metreSq)
+    setMode(metreSq)
+  }
+
+  function setMode (metreSq) {
+    const modeSum = median(metreSq)
+    const $mode = $('.mode')
+
+    $mode.text(formatToFixed(modeSum))
+    return mode(modeSum)
+  }
+
+  function setMean (metreSq) {
+    const medianSum = median(metreSq)
+    const $median = $('.median')
+
+    $median.text(formatToFixed(medianSum))
+    return median(medianSum)
   }
 
   function createAssetTables (filter) {
     if ($('.ipa-data-table').length) {
-      console.log(appDataModel)
-      console.log('results page')
       const assetData = appDataModel ? appDataModel.selectedAssetProjects : []
       const filterData = _.isUndefined(filter) ? assetData : filter
-
-      console.log('filter', _.isUndefined(filter))
-
-      // const data = filteredData || assetData
-
-      console.log('assetData', assetData)
 
       $('.cost-data-table').pagination({
         dataSource: filterData,
