@@ -17,14 +17,14 @@ const formatToFixed = (number) => {
   return `£${Number(num).toLocaleString('en')}`
 }
 
-const toSqMetre = (length, width, cost) => {
+const toSqMetre = (length, width, cost, noFormat) => {
   if (length && width && cost) {
     const l = length
     const w = width
     const result = l * w
     const m2 = cost / result
 
-    return formatToFixed(m2)
+    return noFormat ? m2 : formatToFixed(m2)
   }
 }
 
@@ -157,6 +157,8 @@ $(document).ready(function () {
                 <td class="govuk-table__cell">${num} weeks</td>
             </tr>`
   }
+
+  const average = arr => arr.reduce((a, b) => a + b, 0) / arr.length
 
   function getProjectData () {
     const params = { page: 1, limit: 10 }
@@ -419,6 +421,21 @@ $(document).ready(function () {
 
   })
 
+  function setAverage () {
+    const { selectedAssetProjects } = appDataModel
+    const test = []
+
+    selectedAssetProjects.map(asset => {
+      const { length, width, outturnCost } = asset
+      const result = toSqMetre(length, width, outturnCost, true)
+      test.push(result)
+      return result
+    })
+    const $average = $('.average')
+
+    $average.text(formatToFixed(average(test)))
+  }
+
   function createAssetTables (filter) {
     if ($('.ipa-data-table').length) {
       console.log(appDataModel)
@@ -447,21 +464,19 @@ $(document).ready(function () {
         }
       })
 
-
-
-      // $('.project-schedule-data-table').pagination({
-      //   dataSource: assetData,
-      //   pageSize: 10,
-      //   prevText: 'Previous',
-      //   nextText: 'Next',
-      //   totalNumber: assetData.length,
-      //   callback: function (data, pagination) {
-      //     data.forEach(function (el) {
-      //       $projectScheduleTable.empty()
-      //       $projectScheduleTable.append(projectScheduleTpl(el))
-      //     })
-      //   }
-      // })
+      $('.project-schedule-data-table').pagination({
+        dataSource: assetData,
+        pageSize: 10,
+        prevText: 'Previous',
+        nextText: 'Next',
+        totalNumber: assetData.length,
+        callback: function (data, pagination) {
+          $projectScheduleTable.empty()
+          data.forEach(function (el) {
+            $projectScheduleTable.append(projectScheduleTpl(el))
+          })
+        }
+      })
     }
   }
 
@@ -479,17 +494,10 @@ $(document).ready(function () {
   onInput()
   setCountOnload()
   createAssetTables()
+  setAverage()
 
   //getCheckboxOpts()
   //getProjectData()
-
-  // const $selectAssetType = $('#selectAssetType')
-  // $selectAssetType.submit(function () {
-  //   const session = window.sessionStorage.getItem('app')
-  //   if (session === null) {
-  //     window.sessionStorage.setItem('app', JSON.stringify(appDataModel))
-  //   }
-  // })
 
   $(window).scroll(function () {
     stickyNav()
