@@ -82,6 +82,7 @@ href: "benchmarking-asset"
                 </details>
             </div>
 
+            {% include "includes/filter-order-by.html" %}
             <div class="ipa-data-table cost-data-table">
                 <table class="govuk-table">
                     <caption class="govuk-table__caption govuk-table__caption--m govuk-visually-hidden">Cost data</caption>
@@ -112,8 +113,6 @@ href: "benchmarking-asset"
                     </div>
                 </div>
                 <div class="graph-details">
-
-
                     <div class="figures">
                         <div class="figures-data">
                             <p class="bold-figures">19 weeks</p>
@@ -140,6 +139,7 @@ href: "benchmarking-asset"
                 </div>
 
             <div class="graph-wrapper">
+                {% include "includes/filter-order-by-schedule.html" %}
                 <div class="ipa-data-table project-schedule-data-table">
                     <table class="govuk-table">
                         <caption class="govuk-table__caption govuk-table__caption--m govuk-visually-hidden">Cost data</caption>

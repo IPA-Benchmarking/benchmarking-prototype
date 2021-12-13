@@ -5,9 +5,9 @@ if (window.console && window.console.info) {
   window.console.info('GOV.UK Prototype Kit - do not use for production')
 }
 
-if (window.location.search && $('.results').length) {
-  window.history.replaceState({}, document.title, window.location.pathname)
-}
+// if (window.location.search && $('.results').length) {
+//   window.history.replaceState({}, document.title, window.location.pathname)
+// }
 
 /*********  START: HELPERS ***********/
 
@@ -46,7 +46,7 @@ $(document).ready(function () {
     url: 'https://ipamockapi.herokuapp.com/api'
   }
 
-  const projectsDataModel = []
+  // const projectsDataModel = []
   const paramArr = []
   let itemsToCompare = []
   const $resultsListWrapper = $('.results-list')
@@ -62,6 +62,7 @@ $(document).ready(function () {
   const $results = $('.results')
   const $projectScheduleTable = $('.project-schedule')
   const $average = $('.average')
+  const $assetDetails = $('.asset-details')
 
   const getAppSessionData = window.sessionStorage.getItem('app')
   const appSession = JSON.parse(getAppSessionData)
@@ -69,7 +70,10 @@ $(document).ready(function () {
   console.log('ON LOAD ----- appSession', appSession)
 
   const appDataModel = {
-    selectedAsset: { name: '', type: '' },
+    selectedAsset: {
+      name: '',
+      type: ''
+    },
     assetArray: [],
     appData: [],
     selectedAssetProjects: !_.isNull(appSession) && appSession.selectedAssetProjects ? appSession.selectedAssetProjects : [],
@@ -97,7 +101,7 @@ $(document).ready(function () {
     // const inputVal = items.isArray && $regionListWrapper.length === 0 ? _.camelCase(items[i].value) : _.camelCase(items)
 
     return `<div class="govuk-checkboxes__item">
-                <input class="govuk-checkboxes__input" id="${name}" name="${property}" type="checkbox" value="${name}">
+                <input class="govuk-checkboxes__input filter-item" id="${name}" name="${property}" type="checkbox" value="${name}">
                 <label class="govuk-label govuk-checkboxes__label" for="${name}">
                   ${mapName}
                 </label>
@@ -139,7 +143,7 @@ $(document).ready(function () {
     const { projectName, length, height, width, outturnCost, volume } = asset
 
     return `<tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header"><a class="asset-details" href="benchmarking-asset-detail">${projectName}</a></th>
+                <th scope="row" class="govuk-table__header"><a data-title="${projectName}" class="asset-details" href="benchmarking-asset-detail">${projectName}</a></th>
                 <td class="govuk-table__cell">${length}</td>
                 <td class="govuk-table__cell">${height}</td>
                 <td class="govuk-table__cell">${toSqMetre(length, width, outturnCost)}</td>
@@ -153,7 +157,7 @@ $(document).ready(function () {
     const num = parseFloat(duration_of_build_weeks).toFixed(0)
 
     return `<tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header"><a class="asset-details" href="benchmarking-asset-detail">${projectName}</a></th>
+                <th scope="row" class="govuk-table__header"><a data-title="${projectName}" class="asset-details" href="benchmarking-asset-detail">${projectName}</a></th>
                 <td class="govuk-table__cell">N/A</td>
                 <td class="govuk-table__cell">${num} weeks</td>
             </tr>`
@@ -217,36 +221,37 @@ $(document).ready(function () {
   }
 
   function getAssetData (event, asset) {
-    if ($assetSectionWrapper.length === 0) {
-      return
-    }
+    if ($assetSectionWrapper.length) {
 
-    const { appData } = appDataModel
-    if (appData && appData.length) {
-      const currentAsset = asset || setAssetOpts()
-      const projectTypeID = currentAsset
-      const property = projectTypeID.length ? Object.keys(...projectTypeID) : []
-      let filterData = []
+      console.log('asset', asset)
 
-      filterData = appData.filter(el => {
-        return projectTypeID.some(filter => {
-          return filter[property] === el[property]
+      const { appData } = appDataModel
+      if (appData && appData.length) {
+        const currentAsset = asset || setAssetOpts()
+        const projectTypeID = currentAsset
+        const property = projectTypeID.length ? Object.keys(...projectTypeID) : []
+        let filterData = []
+
+        filterData = appData.filter(el => {
+          return projectTypeID.some(filter => {
+            return filter[property] === el[property]
+          })
         })
-      })
 
-      console.log('filterData', filterData)
+        console.log('filterData', filterData)
 
-      // console.log('appDataModel', appDataModel)
-      const { selectedAssetProjects, assetArray } = appDataModel
-      // console.log('selectedAssetProjects', selectedAssetProjects)
-      // console.log('filterData', filterData)
+        // console.log('appDataModel', appDataModel)
+        const { assetArray } = appDataModel
+        // console.log('selectedAssetProjects', selectedAssetProjects)
+        // console.log('filterData', filterData)
 
-      assetArray.push(...currentAsset)
-      appDataModel.selectedAssetProjects = filterData
-      $projectCount.html(filterData.length)
+        assetArray.push(...currentAsset)
+        appDataModel.selectedAssetProjects = filterData
+        $projectCount.html(filterData.length)
 
-      window.sessionStorage.setItem('app', JSON.stringify(appDataModel))
-      // console.log('filterData', filterData)
+        window.sessionStorage.setItem('app', JSON.stringify(appDataModel))
+        // console.log('filterData', filterData)
+      }
     }
   }
 
@@ -275,7 +280,9 @@ $(document).ready(function () {
 
   function setCountOnload () {
     if ($countWrapper.length) {
-      const { selectedAssetProjects } = appSession
+      const { selectedAssetProjects, selectedAsset } = appSession
+      const assetName = !_.isEmpty(selectedAsset) ? selectedAsset.name.slice(0, -1) : {}
+      $assetTitle.html(assetName)
       $countWrapper.html(selectedAssetProjects.length)
     }
   }
@@ -294,42 +301,30 @@ $(document).ready(function () {
   }
 
   function getAssetResultsData () {
-    if ($resultPageWrapper.length) {
+    if ($results.length) {
       const getSession = window.sessionStorage.getItem('app')
       const session = JSON.parse(getSession)
-      const { selectedAssetProjects, selectedAsset } = session
+      const { selectedAssetProjects } = session
       const projectData = selectedAssetProjects
-      const assetName = selectedAsset.name.slice(0, -1)
-      //const items = []
 
-      $assetTitle.html(assetName)
-
-      // if (projectData.length) {
-      //   projectData.map((item, index) => {
-      //     items.push(item)
-      //     //$resultsListWrapper.append(resultsListItemTpl(items, index))
-      //   })
-      // }
-      if ($results.length) {
-        $results.pagination({
-          dataSource: projectData,
-          pageSize: 10,
-          prevText: 'Previous',
-          nextText: 'Next',
-          totalNumber: selectedAssetProjects.length,
-          callback: function (data, pagination) {
-            $currentResultsCount.html(pagination.pageSize)
-            data.forEach(function (el, i) {
-              $resultsListWrapper.append(resultsListItemTpl(el, i))
-            })
-          }
-        })
-      }
+      $results.pagination({
+        dataSource: projectData,
+        pageSize: 10,
+        prevText: 'Previous',
+        nextText: 'Next',
+        totalNumber: selectedAssetProjects.length,
+        callback: function (data, pagination) {
+          $currentResultsCount.html(pagination.pageSize)
+          data.forEach(function (el, i) {
+            $resultsListWrapper.append(resultsListItemTpl(el, i))
+          })
+        }
+      })
     }
   }
 
   function onInput () {
-    $resultPageWrapper.on('click', 'input', function () {
+    $resultPageWrapper.on('click', '.filter-item', function () {
       const checkBox = $(this)
       const value = checkBox.val()
       const name = checkBox.attr('name')
@@ -370,7 +365,6 @@ $(document).ready(function () {
         return filter[property] === el[property]
       })
     })
-
 
     console.log('arrayFiltered', arrayFiltered)
     updateFilteredList(arrayFiltered)
@@ -424,16 +418,15 @@ $(document).ready(function () {
   })
 
   const mode = (arr) => {
-    if (arr.length) {
+    if (arr && arr.length) {
       return arr.sort((a, b) =>
-        arr.filter(v => v === a).length
-        - arr.filter(v => v === b).length
+        arr.filter(v => v === a).length - arr.filter(v => v === b).length
       ).pop()
     }
   }
 
   const median = (array) => {
-    if (array.length) {
+    if (array && array.length) {
       array = array.sort()
 
       if (array.length % 2 === 0) { // array with even number elements
@@ -452,10 +445,9 @@ $(document).ready(function () {
       const { length, width, outturnCost } = asset
       const result = toSqMetre(length, width, outturnCost, true)
       metreSq.push(result)
-
     })
 
-    $average.text(formatToFixed(average(metreSq)))
+    $average.text(`£${parseFloat(average(metreSq)).toFixed(0)}K`)
     setMean(metreSq)
     setMode(metreSq)
   }
@@ -472,7 +464,7 @@ $(document).ready(function () {
     const medianSum = median(metreSq)
     const $median = $('.median')
 
-    $median.text(formatToFixed(medianSum))
+    $median.text(`${formatToFixed(medianSum)}`)
     return median(medianSum)
   }
 
@@ -484,8 +476,8 @@ $(document).ready(function () {
       $('.cost-data-table').pagination({
         dataSource: filterData,
         pageSize: 10,
-        prevText: 'Previous',
-        nextText: 'Next',
+        prevText: '&laquo; Previous',
+        nextText: 'Next &raquo;',
         totalNumber: filterData.length,
         callback: function (data, pagination) {
           console.log('pagination', pagination)
@@ -499,8 +491,8 @@ $(document).ready(function () {
       $('.project-schedule-data-table').pagination({
         dataSource: assetData,
         pageSize: 10,
-        prevText: 'Previous',
-        nextText: 'Next',
+        prevText: '&laquo; Previous',
+        nextText: 'Next &raquo;',
         totalNumber: assetData.length,
         callback: function (data, pagination) {
           $projectScheduleTable.empty()
@@ -511,6 +503,12 @@ $(document).ready(function () {
       })
     }
   }
+
+  $('.project-schedule, .cost-table').on('click', $assetDetails, function (evt) {
+    const elem = evt.target
+    appDataModel.detailPageTitle = elem.dataset.title
+    window.sessionStorage.setItem('app', JSON.stringify(appDataModel))
+  })
 
   /********* END: RESULT PAGE ***********/
 

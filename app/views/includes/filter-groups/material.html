@@ -1,22 +1,30 @@
-<fieldset class="govuk-fieldset">
-    <div class="govuk-radios">
-        <div class="govuk-radios__item">
-            <input class="govuk-radios__input" id="cement" name="material" type="radio" value="cement">
-            <label class="govuk-label govuk-radios__label" for="cement">
-                Cement
-            </label>
+<div class="govuk-form-group">
+    <fieldset class="govuk-fieldset">
+<!--        <legend class="govuk-fieldset__legend govuk-fieldset__legend&#45;&#45;m">-->
+<!--            <h1 class="govuk-fieldset__heading">-->
+<!--                Organisation-->
+<!--            </h1>-->
+<!--        </legend>-->
+        <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+            <div class="govuk-checkboxes__item">
+                <input class="govuk-checkboxes__input filter-item" id="cement" name="material" type="checkbox" value="cement">
+                <label class="govuk-label govuk-checkboxes__label" for="cement">
+                    Cement
+                </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+                <input class="govuk-checkboxes__input filter-item" id="stoneGravel" name="material" type="checkbox" value="stoneGravel">
+                <label class="govuk-label govuk-checkboxes__label" for="stoneGravel">
+                    Stone and gravel
+                </label>
+            </div>
+            <div class="govuk-checkboxes__item">
+                <input class="govuk-checkboxes__input filter-item" id="other" name="material" type="checkbox" value="other">
+                <label class="govuk-label govuk-checkboxes__label" for="other">
+                    Other materials
+                </label>
+            </div>
         </div>
-        <div class="govuk-radios__item">
-            <input class="govuk-radios__input" id="stoneGravel" name="material" type="radio" value="stoneGravel">
-            <label class="govuk-label govuk-radios__label" for="stoneGravel">
-                Stone and gravel
-            </label>
-        </div>
-        <div class="govuk-radios__item">
-            <input class="govuk-radios__input" id="other" name="material" type="radio" value="other">
-            <label class="govuk-label govuk-radios__label" for="other">
-                Other materials
-            </label>
-        </div>
-    </div>
-</fieldset>
+
+    </fieldset>
+</div>

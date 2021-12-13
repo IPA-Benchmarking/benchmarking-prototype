@@ -213,13 +213,18 @@
 
 .ipa-custom-textfield {
     .govuk-form-group {
-        width: 125px;
+        //width: 100px;
         display: inline-block;
         margin-bottom: 0;
+        width: 40%;
+
+        &:first-child {
+            margin-right: 15px;
+        }
 
         input {
             display: inline-block;
-            width: 60px;
+            // width: 50%;
             z-index: 2;
             position: relative;
         }
@@ -414,8 +419,8 @@
 }
 
 .region-list{
-    max-height: 210px;
-    overflow-y: scroll;
+     max-height: 210px;
+     overflow-y: scroll;
 }
 
 .sticky{
@@ -486,3 +491,18 @@
         text-transform: lowercase;
     }
 }
+
+.sort-wrapper {
+    display: flex;
+
+    .govuk-form-group {
+        width: 50%;
+        justify-content:flex-end;
+        text-align: right;
+    }
+}
+
+.inline-metric {
+    display: inline-block;
+}
+

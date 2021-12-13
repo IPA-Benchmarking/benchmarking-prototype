@@ -1,47 +1,41 @@
 <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
-
     <div class="govuk-accordion__section ">
         <div class="govuk-accordion__section-header">
             <h2 class="govuk-accordion__section-heading">
         <span class="govuk-accordion__section-button" id="accordion-default-heading-1">
-          Length
+          Physical measurements
         </span>
             </h2>
         </div>
         <div id="accordion-default-content-1" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-1">
-            {% include "includes/filter-groups/length.html" %}
-            {% include "includes/filter-groups/height.html" %}
-            {% include "includes/filter-groups/volume.html" %}
+            {% include "includes/physical-measurements.html" %}
         </div>
     </div>
-    <!--end -->
     <!--end -->
     <div class="govuk-accordion__section ">
         <div class="govuk-accordion__section-header">
             <h2 class="govuk-accordion__section-heading">
         <span class="govuk-accordion__section-button" id="accordion-default-heading-2">
-          Ground type
+          Construction features
         </span>
             </h2>
         </div>
         <div id="accordion-default-content-4" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-2">
-            {% include "includes/filter-groups/ground-type.html" %}
-            {% include "includes/filter-groups/material.html" %}
+            {% include "includes/construction-features.html" %}
         </div>
     </div>
     <!--end -->
+
     <div class="govuk-accordion__section ">
         <div class="govuk-accordion__section-header">
             <h2 class="govuk-accordion__section-heading">
         <span class="govuk-accordion__section-button" id="accordion-default-heading-3">
-          Region
+          Project details
         </span>
             </h2>
         </div>
         <div id="accordion-default-content-6" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-3">
-            {% include "includes/filter-groups/sector.html" %}
-            {% include "includes/filter-groups/region.html" %}
-            {% include "includes/filter-groups/work-type.html" %}
+            {% include "includes/project-details.html" %}
         </div>
     </div>
     <!--end -->

@@ -1,0 +1,36 @@
+<div class="govuk-form-group">
+<!--    <fieldset class="govuk-fieldset" aria-describedby="contact-hint">-->
+<!--        <legend class="govuk-fieldset__legend govuk-fieldset__legend&#45;&#45;l">-->
+<!--            <h1 class="govuk-fieldset__heading">-->
+<!--                How would you like to be contacted?-->
+<!--            </h1>-->
+<!--        </legend>-->
+<!--        <div id="contact-hint" class="govuk-hint">-->
+<!--            Select all options that are relevant to you.-->
+<!--        </div>-->
+        <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+            <div class="govuk-checkboxes__item">
+                <input class="govuk-checkboxes__input" id="ground-type" name="ground-type" type="checkbox" value="" data-aria-controls="conditional-ground-type">
+                <label class="govuk-label govuk-checkboxes__label" for="ground-type">
+                    Ground type
+                </label>
+            </div>
+            <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-ground-type">
+                <div class="govuk-form-group">
+                    {% include "includes/filter-groups/ground-type.html" %}
+                </div>
+            </div>
+            <div class="govuk-checkboxes__item">
+                <input class="govuk-checkboxes__input" id="material" name="material" type="checkbox" value="" data-aria-controls="conditional-material">
+                <label class="govuk-label govuk-checkboxes__label" for="material">
+                    Material
+                </label>
+            </div>
+            <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-material">
+                <div class="govuk-form-group">
+                    {% include "includes/filter-groups/material.html" %}
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</div>
