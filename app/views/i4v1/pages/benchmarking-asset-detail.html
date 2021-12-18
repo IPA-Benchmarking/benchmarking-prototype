@@ -4,21 +4,18 @@
 GOV.UK Prototype Kit
 {% endblock %}
 
+{% block beforeContent %}
+{{ govukBackLink({
+text: "Back",
+href: "benchmarking-results"
+}) }}
+{% endblock %}
+
 {% block content %}
-
-{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-
-<div class="back-link-wrapper">
-    {{ govukBackLink({
-    text: "Back",
-    href: "benchmarking-results"
-    }) }}
-</div>
-
-<div class="govuk-grid-row">
+<div class="govuk-grid-row full-detail-page">
     <div class="govuk-grid-column-full">
         <h1 class="govuk-heading-xl results-title">
-            Embankment 7
+            Embankment X
         </h1>
         <ul class="govuk-list util-bar">
             <li>Cost data has been normalised to inflation in Q1 2020. </li>

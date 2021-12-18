@@ -47,8 +47,13 @@ $(document).ready(function () {
   }
 
   // const projectsDataModel = []
-  const paramArr = []
+  let paramArr = []
   let itemsToCompare = []
+  const selectedOpts = []
+  const selectedCategoriesArr = []
+  const selectedOptionsArr = []
+
+
   const $resultsListWrapper = $('.results-list')
   const $resultPageWrapper = $('.results-page')
   const $countWrapper = $('.results-count')
@@ -63,32 +68,41 @@ $(document).ready(function () {
   const $projectScheduleTable = $('.project-schedule')
   const $average = $('.average')
   const $assetDetails = $('.asset-details')
+  const $resultsTitle = $('.results-title')
+  const $detailPage = $('.full-detail-page')
+  const $assetAmount = $('.asset-amount')
 
   const getAppSessionData = window.sessionStorage.getItem('app')
   const appSession = JSON.parse(getAppSessionData)
 
   console.log('ON LOAD ----- appSession', appSession)
 
+  const { selectedAsset, assetArray, appData, selectedAssetProjects } = appSession || {}
+
   const appDataModel = {
     selectedAsset: {
-      name: '',
-      type: ''
+      name: !_.isNull(appSession) && selectedAsset ? selectedAsset.name : '',
+      type: !_.isNull(appSession) && selectedAsset ? selectedAsset.type : ''
     },
-    assetArray: [],
-    appData: [],
-    selectedAssetProjects: !_.isNull(appSession) && appSession.selectedAssetProjects ? appSession.selectedAssetProjects : [],
+    assetArray: !_.isNull(appSession) && assetArray ? assetArray : [],
+    appData: !_.isNull(appSession) && appData ? appData : [],
+    selectedAssetProjects: !_.isNull(appSession) && selectedAssetProjects ? selectedAssetProjects : [],
     compareList: [],
-    currentFilterData: []
+    currentFilterData: {},
+    category: [],
+    options: []
   }
 
   const radiobuttonTpl = (items) => {
     const type = _.camelCase(items.type) || _.camelCase(items)
     const isChecked = items.id === '2' ? 'checked' : ''
 
+    console.log('items', items)
+
     return `<div class="govuk-radios__item">
                <input class="govuk-radios__input" id="${type}" name="projectTypeID" data-asset-name="${type}" type="radio" value="${items.id}" ${isChecked}>
-               <label class="govuk-label govuk-radios__label" for="${type}">
-                        ${items.type || items}
+               <label class="govuk-label govuk-radios__label asset-type-label" for="${type}">
+                        ${items.type || items} <span class="asset-amount">(0)</span>
                </label>
            </div>`
   }
@@ -166,20 +180,12 @@ $(document).ready(function () {
   const average = arr => arr.reduce((a, b) => a + b, 0) / arr.length
 
   function getProjectData () {
-    // const params = { page: 1, limit: 10 }
-
     $.get(`${ipaConfig.url}/projects`, function (data) {
-      // const dataModel = data
-      // projectsDataModel.push(...dataModel)
     }).done((data) => {
-      // console.log('getProjectData', data)
-      const { appData } = appDataModel
-      appData.push(...data)
+      appDataModel.appData = data
 
       getAssetData()
       getAllRegions(data)
-
-      // averageCost()
     })
   }
 
@@ -212,6 +218,9 @@ $(document).ready(function () {
       const { selectedAsset } = appDataModel
       const assetArr = []
 
+      const countElem = elem.closest('.govuk-radios__item').find('.asset-amount')
+      countElem.text(`(${appDataModel.selectedAssetProjects.length})`)
+
       selectedAsset.name = name
       selectedAsset.type = value
       assetArr.push({ [`${prop}`]: value })
@@ -223,34 +232,25 @@ $(document).ready(function () {
   function getAssetData (event, asset) {
     if ($assetSectionWrapper.length) {
 
-      console.log('asset', asset)
-
       const { appData } = appDataModel
       if (appData && appData.length) {
         const currentAsset = asset || setAssetOpts()
         const projectTypeID = currentAsset
         const property = projectTypeID.length ? Object.keys(...projectTypeID) : []
-        let filterData = []
 
-        filterData = appData.filter(el => {
+        const filterData = appData.filter(el => {
           return projectTypeID.some(filter => {
             return filter[property] === el[property]
           })
-        })
+        }).map(obj => ({ ...obj }))
 
         console.log('filterData', filterData)
 
-        // console.log('appDataModel', appDataModel)
-        const { assetArray } = appDataModel
-        // console.log('selectedAssetProjects', selectedAssetProjects)
-        // console.log('filterData', filterData)
-
+        const { assetArray, selectedAssetProjects } = appDataModel
         assetArray.push(...currentAsset)
         appDataModel.selectedAssetProjects = filterData
         $projectCount.html(filterData.length)
-
         window.sessionStorage.setItem('app', JSON.stringify(appDataModel))
-        // console.log('filterData', filterData)
       }
     }
   }
@@ -263,14 +263,19 @@ $(document).ready(function () {
       const name = input.data('asset-name')
       const selectedAssetArr = []
       const { selectedAsset } = appDataModel
+      const countElem = input.closest('.govuk-radios__item').find('.asset-amount')
+
+
+      console.log(input)
 
       selectedAsset.name = value
       selectedAsset.type = name
 
-      console.log('yes...')
+      // console.log('yes...')
 
       selectedAssetArr.push({ [`${prop}`]: value })
       getAssetData(event, selectedAssetArr)
+      countElem.text(`(${appDataModel.selectedAssetProjects.length})`)
     })
   }
 
@@ -323,33 +328,72 @@ $(document).ready(function () {
     }
   }
 
-  function onInput () {
-    $resultPageWrapper.on('click', '.filter-item', function () {
-      const checkBox = $(this)
-      const value = checkBox.val()
-      const name = checkBox.attr('name')
-
-      updateFilterOpts(checkBox, value, name)
-    })
-  }
-
   function updateFilterOpts (el, value, propName) {
-    let opts = []
-
     if (el.is(':checked')) {
       paramArr.push({ [`${propName}`]: value })
-      opts = paramArr
     } else {
-      opts = $.grep(paramArr, function (e) {
-        return e[`${propName}`] !== value
+      paramArr = $.grep(paramArr, function (obj) {
+        return obj[`${propName}`] !== value
       })
     }
 
-    console.log('opts', opts)
-    console.log('paramArr', paramArr)
-
-    onFilter(opts, propName)
+    appDataModel.currentFilterData = paramArr
+    window.sessionStorage.setItem('app', JSON.stringify(appDataModel))
+    getSelectedOpts(paramArr)
+    // onFilter(paramArr, propName)
+    // getSelectedOpts()
   }
+
+  function getSelectedSectionOpts (elem, value) {
+    if (elem.hasClass('filter-item')) {
+      return
+    }
+
+    if (elem.is(':checked')) {
+      selectedOpts.push(value)
+    } else {
+      const index = selectedOpts.indexOf(value)
+      if (index > -1) {
+        selectedOpts.splice(index, 1)
+      }
+    }
+  }
+
+  function getSelectedOpts (paramArr) {
+    const params = Object.assign({}, ...paramArr)
+
+    selectedCategoriesArr.push(Object.keys(params))
+    selectedOptionsArr.push(Object.values(params))
+
+    // const { category, options } = session
+
+    console.log('selectedOptsKeysArr', selectedCategoriesArr)
+    console.log('selectedOptsValuesArr', selectedOptionsArr.flat())
+
+    appSession.category = selectedCategoriesArr
+    appSession.options = selectedOptionsArr
+
+    window.sessionStorage.setItem('app', JSON.stringify(appSession))
+    // console.log('selectedOptsArr', selectedOptsArr)
+
+    // selectedOptsArr
+
+  }
+
+  function onInput () {
+    $resultPageWrapper.on('click', 'input', function (e) {
+      const $checkBox = $(this)
+      const value = $checkBox.val()
+      const name = $checkBox.attr('name')
+
+      if ($checkBox.hasClass('filter-item')) {
+        updateFilterOpts($checkBox, value, name)
+      }
+
+      // getSelectedSectionOpts($checkBox, name)
+    })
+  }
+
 
   function onFilter (filterOpts, property) {
     const getSession = window.sessionStorage.getItem('app')
@@ -358,7 +402,7 @@ $(document).ready(function () {
     const data = selectedAssetProjects
     const opts = filterOpts.length > 0 ? filterOpts : data
 
-    console.log('filterOpts', filterOpts)
+    // console.log('filterOpts', filterOpts)
 
     const arrayFiltered = data.filter(el => {
       return opts.some(filter => {
@@ -366,13 +410,14 @@ $(document).ready(function () {
       })
     })
 
-    console.log('arrayFiltered', arrayFiltered)
+    // console.log('arrayFiltered', arrayFiltered)
     updateFilteredList(arrayFiltered)
     createAssetTables(arrayFiltered)
     appDataModel.selectedAssetProjects = arrayFiltered
     window.sessionStorage.setItem('app', JSON.stringify(appDataModel))
   }
 
+  /*** START: Used on revision 1 ***/
   function updateFilteredList (arrayFiltered) {
     $resultsListWrapper.empty()
 
@@ -387,6 +432,7 @@ $(document).ready(function () {
 
     $countWrapper.text(items.length)
   }
+  /*** END: Used on revision 1 ***/
 
   $resultsListWrapper.on('click', '.addToCompare', function (event) {
     event.preventDefault()
@@ -480,7 +526,7 @@ $(document).ready(function () {
         nextText: 'Next &raquo;',
         totalNumber: filterData.length,
         callback: function (data, pagination) {
-          console.log('pagination', pagination)
+          // console.log('pagination', pagination)
           $costTable.empty()
           data.forEach(function (el) {
             $costTable.append(costTableTpl(el))
@@ -489,11 +535,11 @@ $(document).ready(function () {
       })
 
       $('.project-schedule-data-table').pagination({
-        dataSource: assetData,
+        dataSource: filterData,
         pageSize: 10,
         prevText: '&laquo; Previous',
         nextText: 'Next &raquo;',
-        totalNumber: assetData.length,
+        totalNumber: filterData.length,
         callback: function (data, pagination) {
           $projectScheduleTable.empty()
           data.forEach(function (el) {
@@ -509,6 +555,15 @@ $(document).ready(function () {
     appDataModel.detailPageTitle = elem.dataset.title
     window.sessionStorage.setItem('app', JSON.stringify(appDataModel))
   })
+
+  if ($detailPage.length) {
+    const getSession = window.sessionStorage.getItem('app')
+    const session = JSON.parse(getSession)
+    const { detailPageTitle } = session
+
+    $resultsTitle.text(detailPageTitle)
+  }
+
 
   /********* END: RESULT PAGE ***********/
 
