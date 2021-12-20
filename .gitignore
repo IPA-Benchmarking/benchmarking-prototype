@@ -7,7 +7,8 @@ lib/extensions/_extensions.scss
 .DS_Store
 .start.pid
 .port.tmp
-public
+public/images/docs
+public/javascripts
 node_modules/*
 .tmuxp.*
 .idea/
