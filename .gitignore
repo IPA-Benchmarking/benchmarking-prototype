@@ -9,6 +9,7 @@ lib/extensions/_extensions.scss
 .port.tmp
 public/images/docs
 public/javascripts
+public/stylesheets
 node_modules/*
 .tmuxp.*
 .idea/
