@@ -242,7 +242,10 @@ $(document).ready(function () {
           })
         }).map(obj => ({ ...obj }))
 
-        console.log('filterData', filterData)
+        setTimeout(function () {
+          console.log('filterData', new Array(filterData))
+        }, 100)
+
 
         const { assetArray, selectedAssetProjects } = appDataModel
         assetArray.push(...currentAsset)
