@@ -50,8 +50,8 @@ $(document).ready(function () {
   let paramArr = []
   let itemsToCompare = []
   const selectedOpts = []
-  const selectedCategoriesArr = []
-  const selectedOptionsArr = []
+  //const selectedCategoriesArr = []
+  let selectedFilterOptions = []
 
 
   const $resultsListWrapper = $('.results-list')
@@ -70,7 +70,7 @@ $(document).ready(function () {
   const $assetDetails = $('.asset-details')
   const $resultsTitle = $('.results-title')
   const $detailPage = $('.full-detail-page')
-  const $assetAmount = $('.asset-amount')
+  //const $assetAmount = $('.asset-amount')
 
   const getAppSessionData = window.sessionStorage.getItem('app')
   const appSession = JSON.parse(getAppSessionData)
@@ -88,16 +88,14 @@ $(document).ready(function () {
     appData: !_.isNull(appSession) && appData ? appData : [],
     selectedAssetProjects: !_.isNull(appSession) && selectedAssetProjects ? selectedAssetProjects : [],
     compareList: [],
-    currentFilterData: {},
-    category: [],
+    filterOpts: [],
+    // category: [],
     options: []
   }
 
   const radiobuttonTpl = (items) => {
     const type = _.camelCase(items.type) || _.camelCase(items)
     const isChecked = items.id === '2' ? 'checked' : ''
-
-    console.log('items', items)
 
     return `<div class="govuk-radios__item">
                <input class="govuk-radios__input" id="${type}" name="projectTypeID" data-asset-name="${type}" type="radio" value="${items.id}" ${isChecked}>
@@ -337,9 +335,9 @@ $(document).ready(function () {
       })
     }
 
-    appDataModel.currentFilterData = paramArr
+    //appDataModel.currentFilterData = paramArr
     window.sessionStorage.setItem('app', JSON.stringify(appDataModel))
-    getSelectedOpts(paramArr)
+    setSelectedFilterOpts(paramArr)
     // onFilter(paramArr, propName)
     // getSelectedOpts()
   }
@@ -359,25 +357,40 @@ $(document).ready(function () {
     }
   }
 
-  function getSelectedOpts (paramArr) {
-    const params = Object.assign({}, ...paramArr)
 
-    selectedCategoriesArr.push(Object.keys(params))
-    selectedOptionsArr.push(Object.values(params))
+  function setSelectedFilterOpts (paramArr) {
+    if (paramArr.length) {
+      appSession.filterOpts = paramArr
+      window.sessionStorage.setItem('app', JSON.stringify(appSession))
+    }
+  }
 
-    // const { category, options } = session
+  function getFilterOpts () {
+    const getSession = window.sessionStorage.getItem('app')
+    const session = JSON.parse(getSession)
+    const { filterOpts } = session || {}
+    const optionList = []
 
-    console.log('selectedOptsKeysArr', selectedCategoriesArr)
-    console.log('selectedOptsValuesArr', selectedOptionsArr.flat())
 
-    appSession.category = selectedCategoriesArr
-    appSession.options = selectedOptionsArr
+    if (session && filterOpts.length) {
+      const opts = filterOpts
 
-    window.sessionStorage.setItem('app', JSON.stringify(appSession))
-    // console.log('selectedOptsArr', selectedOptsArr)
+      opts.forEach((items) => {
+        const category = Object.keys(items)
+        const optValue = Object.values(items)
+        optionList.push(category, optValue)
+      })
 
-    // selectedOptsArr
+      return [...new Set(optionList.flat())]
+    }
+  }
 
+  function setActiveInputs () {
+    const filter = getFilterOpts() || []
+
+    filter.forEach(elem => {
+      $('#' + elem).attr('checked', 'checked')
+    })
   }
 
   function onInput () {
@@ -580,6 +593,8 @@ $(document).ready(function () {
   setCountOnload()
   createAssetTables()
   setAverage()
+  getFilterOpts()
+  setActiveInputs()
 
   //getCheckboxOpts()
   //getProjectData()
