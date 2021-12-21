@@ -230,29 +230,28 @@ $(document).ready(function () {
   function getAssetData (event, asset) {
     if ($assetSectionWrapper.length) {
 
-      const { appData } = appDataModel
-      if (appData && appData.length) {
-        const currentAsset = asset || setAssetOpts()
-        const projectTypeID = currentAsset
-        const property = projectTypeID.length ? Object.keys(...projectTypeID) : []
-
-        const filterData = appData.filter(el => {
-          return projectTypeID.some(filter => {
-            return filter[property] === el[property]
-          })
-        }).map(obj => ({ ...obj }))
-
         setTimeout(function () {
-          console.log('filterData', new Array(filterData))
-        }, 100)
+        const { appData } = appDataModel
+        if (appData && appData.length) {
+          const currentAsset = asset || setAssetOpts()
+          const projectTypeID = currentAsset
+          const property = projectTypeID.length ? Object.keys(...projectTypeID) : []
 
+          const filterData = appData.filter(el => {
+            return projectTypeID.some(filter => {
+              return filter[property] === el[property]
+            })
+          }).map(obj => ({ ...obj }))
 
-        const { assetArray, selectedAssetProjects } = appDataModel
-        assetArray.push(...currentAsset)
-        appDataModel.selectedAssetProjects = filterData
-        $projectCount.html(filterData.length)
-        window.sessionStorage.setItem('app', JSON.stringify(appDataModel))
-      }
+            console.log('filterData', new Array(filterData))
+        
+          const { assetArray, selectedAssetProjects } = appDataModel
+          assetArray.push(...currentAsset)
+          appDataModel.selectedAssetProjects = filterData
+          $projectCount.html(filterData.length)
+          window.sessionStorage.setItem('app', JSON.stringify(appDataModel))
+        }
+      }, 100)
     }
   }
 
@@ -306,28 +305,8 @@ $(document).ready(function () {
     }
   }
 
-  function getAssetResultsData () {
-    if ($results.length) {
-      const getSession = window.sessionStorage.getItem('app')
-      const session = JSON.parse(getSession)
-      const { selectedAssetProjects } = session
-      const projectData = selectedAssetProjects
 
-      $results.pagination({
-        dataSource: projectData,
-        pageSize: 10,
-        prevText: 'Previous',
-        nextText: 'Next',
-        totalNumber: selectedAssetProjects.length,
-        callback: function (data, pagination) {
-          $currentResultsCount.html(pagination.pageSize)
-          data.forEach(function (el, i) {
-            $resultsListWrapper.append(resultsListItemTpl(el, i))
-          })
-        }
-      })
-    }
-  }
+  
 
   function updateFilterOpts (el, value, propName) {
     if (el.is(':checked')) {
@@ -338,28 +317,10 @@ $(document).ready(function () {
       })
     }
 
-    //appDataModel.currentFilterData = paramArr
     window.sessionStorage.setItem('app', JSON.stringify(appDataModel))
     setSelectedFilterOpts(paramArr)
-    // onFilter(paramArr, propName)
-    // getSelectedOpts()
+    onFilter(paramArr, propName)
   }
-
-  function getSelectedSectionOpts (elem, value) {
-    if (elem.hasClass('filter-item')) {
-      return
-    }
-
-    if (elem.is(':checked')) {
-      selectedOpts.push(value)
-    } else {
-      const index = selectedOpts.indexOf(value)
-      if (index > -1) {
-        selectedOpts.splice(index, 1)
-      }
-    }
-  }
-
 
   function setSelectedFilterOpts (paramArr) {
     if (paramArr.length) {
@@ -405,8 +366,6 @@ $(document).ready(function () {
       if ($checkBox.hasClass('filter-item')) {
         updateFilterOpts($checkBox, value, name)
       }
-
-      // getSelectedSectionOpts($checkBox, name)
     })
   }
 
@@ -415,10 +374,8 @@ $(document).ready(function () {
     const getSession = window.sessionStorage.getItem('app')
     const session = JSON.parse(getSession)
     const { selectedAssetProjects } = session
-    const data = selectedAssetProjects
+    const data = [...selectedAssetProjects]
     const opts = filterOpts.length > 0 ? filterOpts : data
-
-    // console.log('filterOpts', filterOpts)
 
     const arrayFiltered = data.filter(el => {
       return opts.some(filter => {
@@ -426,29 +383,11 @@ $(document).ready(function () {
       })
     })
 
-    // console.log('arrayFiltered', arrayFiltered)
-    updateFilteredList(arrayFiltered)
+    
+    updateFilteredList(arrayFiltered)  /*** Used on revision 1 ***/
     createAssetTables(arrayFiltered)
-    appDataModel.selectedAssetProjects = arrayFiltered
-    window.sessionStorage.setItem('app', JSON.stringify(appDataModel))
   }
 
-  /*** START: Used on revision 1 ***/
-  function updateFilteredList (arrayFiltered) {
-    $resultsListWrapper.empty()
-
-    const items = []
-
-    if (arrayFiltered.length) {
-      arrayFiltered.map((item, index) => {
-        items.push(item)
-        $resultsListWrapper.append(resultsListItemTpl(items, index))
-      })
-    }
-
-    $countWrapper.text(items.length)
-  }
-  /*** END: Used on revision 1 ***/
 
   $resultsListWrapper.on('click', '.addToCompare', function (event) {
     event.preventDefault()
@@ -579,6 +518,48 @@ $(document).ready(function () {
 
     $resultsTitle.text(detailPageTitle)
   }
+
+  
+  /*** START: Used on revision 1 ***/
+
+  function getAssetResultsData () {
+    if ($results.length) {
+      const getSession = window.sessionStorage.getItem('app')
+      const session = JSON.parse(getSession)
+      const { selectedAssetProjects } = session
+      const projectData = selectedAssetProjects
+
+      $results.pagination({
+        dataSource: projectData,
+        pageSize: 10,
+        prevText: 'Previous',
+        nextText: 'Next',
+        totalNumber: selectedAssetProjects.length,
+        callback: function (data, pagination) {
+          $currentResultsCount.html(pagination.pageSize)
+          data.forEach(function (el, i) {
+            $resultsListWrapper.append(resultsListItemTpl(el, i))
+          })
+        }
+      })
+    }
+  }
+
+function updateFilteredList (arrayFiltered) {
+  $resultsListWrapper.empty()
+
+  const items = []
+
+  if (arrayFiltered.length) {
+    arrayFiltered.map((item, index) => {
+      items.push(item)
+      $resultsListWrapper.append(resultsListItemTpl(items, index))
+    })
+  }
+
+  $countWrapper.text(items.length)
+}
+/*** END: Used on revision 1 ***/
 
 
   /********* END: RESULT PAGE ***********/
