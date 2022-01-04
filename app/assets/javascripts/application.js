@@ -53,7 +53,6 @@ $(document).ready(function () {
   //const selectedCategoriesArr = []
   let selectedFilterOptions = []
 
-
   const $resultsListWrapper = $('.results-list')
   const $resultPageWrapper = $('.results-page')
   const $countWrapper = $('.results-count')
@@ -70,6 +69,7 @@ $(document).ready(function () {
   const $assetDetails = $('.asset-details')
   const $resultsTitle = $('.results-title')
   const $detailPage = $('.full-detail-page')
+  const $assetInputs =  $('#selectAssetType').find('.govuk-radios--conditional');
   //const $assetAmount = $('.asset-amount')
 
   const getAppSessionData = window.sessionStorage.getItem('app')
@@ -181,7 +181,6 @@ $(document).ready(function () {
     $.get(`${ipaConfig.url}/projects`, function (data) {
     }).done((data) => {
       appDataModel.appData = data
-
       getAssetData()
       getAllRegions(data)
     })
@@ -190,8 +189,10 @@ $(document).ready(function () {
   /********* START: ASSET SELECTION PAGE  ***********/
 
   function getAssetOpts () {
-    $.get(`${ipaConfig.url}/projectType`, function(data) {
+    $.get(`${ipaConfig.url}/projectType`, function (data) {
       if ($('.asset-list').length && data.length) {
+        $assetInputs.css('display', 'none')
+
         const groupSectors = _.mapValues(_.groupBy(data, 'sector'))
 
         Object.keys(groupSectors).forEach(function (key) {
@@ -204,6 +205,9 @@ $(document).ready(function () {
           })
         })
       }
+    }).done(() => {
+      $('.ajax-loader').css('display', 'none')
+      $assetInputs.css('display', 'block')
     })
   }
 
@@ -230,7 +234,7 @@ $(document).ready(function () {
   function getAssetData (event, asset) {
     if ($assetSectionWrapper.length) {
 
-        setTimeout(function () {
+      setTimeout(function () {
         const { appData } = appDataModel
         if (appData && appData.length) {
           const currentAsset = asset || setAssetOpts()
@@ -243,8 +247,8 @@ $(document).ready(function () {
             })
           }).map(obj => ({ ...obj }))
 
-            console.log('filterData', new Array(filterData))
-        
+          console.log('filterData', new Array(filterData))
+
           const { assetArray, selectedAssetProjects } = appDataModel
           assetArray.push(...currentAsset)
           appDataModel.selectedAssetProjects = filterData
@@ -264,7 +268,6 @@ $(document).ready(function () {
       const selectedAssetArr = []
       const { selectedAsset } = appDataModel
       const countElem = input.closest('.govuk-radios__item').find('.asset-amount')
-
 
       console.log(input)
 
@@ -305,9 +308,6 @@ $(document).ready(function () {
     }
   }
 
-
-  
-
   function updateFilterOpts (el, value, propName) {
     if (el.is(':checked')) {
       paramArr.push({ [`${propName}`]: value })
@@ -334,7 +334,6 @@ $(document).ready(function () {
     const session = JSON.parse(getSession)
     const { filterOpts } = session || {}
     const optionList = []
-
 
     if (session && filterOpts.length) {
       const opts = filterOpts
@@ -369,7 +368,6 @@ $(document).ready(function () {
     })
   }
 
-
   function onFilter (filterOpts, property) {
     const getSession = window.sessionStorage.getItem('app')
     const session = JSON.parse(getSession)
@@ -383,11 +381,12 @@ $(document).ready(function () {
       })
     })
 
-    
-    updateFilteredList(arrayFiltered)  /*** Used on revision 1 ***/
+
+    $countWrapper.html(arrayFiltered.length)
+    updateFilteredList(arrayFiltered)
+    /*** Used on revision 1 ***/
     createAssetTables(arrayFiltered)
   }
-
 
   $resultsListWrapper.on('click', '.addToCompare', function (event) {
     event.preventDefault()
@@ -519,7 +518,6 @@ $(document).ready(function () {
     $resultsTitle.text(detailPageTitle)
   }
 
-  
   /*** START: Used on revision 1 ***/
 
   function getAssetResultsData () {
@@ -545,31 +543,29 @@ $(document).ready(function () {
     }
   }
 
-function updateFilteredList (arrayFiltered) {
-  $resultsListWrapper.empty()
+  function updateFilteredList (arrayFiltered) {
+    $resultsListWrapper.empty()
 
-  const items = []
+    const items = []
 
-  if (arrayFiltered.length) {
-    arrayFiltered.map((item, index) => {
-      items.push(item)
-      $resultsListWrapper.append(resultsListItemTpl(items, index))
-    })
+    if (arrayFiltered.length) {
+      arrayFiltered.map((item, index) => {
+        items.push(item)
+        $resultsListWrapper.append(resultsListItemTpl(items, index))
+      })
+    }
+
+    $countWrapper.text(items.length)
   }
 
-  $countWrapper.text(items.length)
-}
-/*** END: Used on revision 1 ***/
-
+  /*** END: Used on revision 1 ***/
 
   /********* END: RESULT PAGE ***********/
-
 
   /**** Asset page ****/
   getAssetOpts()
   getProjectData()
   assetInputs()
-
 
   /**** Results page ****/
   getAssetResultsData()
@@ -600,7 +596,5 @@ function updateFilteredList (arrayFiltered) {
       }
     }
   }
-
-
 
 })
