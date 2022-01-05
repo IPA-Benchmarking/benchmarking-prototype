@@ -1,22 +1,26 @@
 if (document.getElementById('chart_div')) {
+  const getSession = window.sessionStorage.getItem('app')
+
   google.charts.load('current', { 'packages': ['corechart'] })
   google.charts.setOnLoadCallback(drawChart)
 
   function drawChart () {
-    const data = google.visualization.arrayToDataTable([
-      ['Age', 'Weight'],
-      [8, 12],
-      [4, 5.5],
-      [11, 14],
-      [4, 5],
-      [3, 3.5],
-      [6.5, 7]
-    ])
+    const data = new google.visualization.DataTable()
+    data.addColumn('number', 'Cost Per m2')
+    data.addColumn('number', 'Total asset')
+    data.addColumn({ type: 'string', role: 'tooltip', 'p': { 'html': true } })
+    data.addRows(JSON.parse(getSession).graphData)
 
-    var options = {
-      title: 'Total asset cost (million)',
-      hAxis: { title: 'Cost per m2', minValue: 0, maxValue: 15 },
-      vAxis: { title: 'Total asset cost (million)', minValue: 0, maxValue: 15 },
+    const options = {
+      pointShape: 'diamond',
+      pointSize: 10,
+      width: 628,
+      height: 360,
+      colors: ['#1D70B8'],
+      tooltip: { trigger: 'selection', isHtml: true },
+      //title: 'Total asset cost (million)',
+      hAxis: { format: 'short', title: 'Cost per m2' },
+      vAxis: { format: 'short', title: 'Total asset cost (million)', ticks: [0, 1000000, 2000000, 3000000, 4000000] },
       legend: 'none'
     }
 

@@ -15,9 +15,17 @@ href: "#"
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+        <div class="ajax-loader">
+            <div class="ajax-loader-text">
+                <p class="govuk-body govuk-!-font-size-27">Loading Asset data...</p>
+            </div>
+            <div class="ccms-loader"></div>
+        </div>
+
+
         <div class="asset-list radio-list">
             <div class="govuk-form-group">
-                <form action="benchmarking-results" id="selectAssetType" class="select-asset-type">
+                <form action="benchmarking-how-to" id="selectAssetType" class="select-asset-type">
                     <div class="govuk-form-group">
                         <fieldset class="govuk-fieldset" aria-describedby="contact-hint">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
@@ -37,13 +45,6 @@ href: "#"
                             </details>
                             <div id="contact-hint" class="govuk-hint govuk-visually-hidden">
                                 Select one option.
-                            </div>
-
-                            <div class="ajax-loader">
-                                <div class="ajax-loader-text">
-                                <p class="govuk-body govuk-!-font-size-27">Loading Asset data...</p>
-                                </div>
-                                <div class="ccms-loader"></div>
                             </div>
 
                             <div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">

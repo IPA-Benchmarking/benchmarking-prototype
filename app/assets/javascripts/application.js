@@ -69,7 +69,7 @@ $(document).ready(function () {
   const $assetDetails = $('.asset-details')
   const $resultsTitle = $('.results-title')
   const $detailPage = $('.full-detail-page')
-  const $assetInputs =  $('#selectAssetType').find('.govuk-radios--conditional');
+  const $assetList = $('.asset-list')
   //const $assetAmount = $('.asset-amount')
 
   const getAppSessionData = window.sessionStorage.getItem('app')
@@ -189,10 +189,9 @@ $(document).ready(function () {
   /********* START: ASSET SELECTION PAGE  ***********/
 
   function getAssetOpts () {
+    $assetList.css('display', 'none')
     $.get(`${ipaConfig.url}/projectType`, function (data) {
       if ($('.asset-list').length && data.length) {
-        $assetInputs.css('display', 'none')
-
         const groupSectors = _.mapValues(_.groupBy(data, 'sector'))
 
         Object.keys(groupSectors).forEach(function (key) {
@@ -207,7 +206,7 @@ $(document).ready(function () {
       }
     }).done(() => {
       $('.ajax-loader').css('display', 'none')
-      $assetInputs.css('display', 'block')
+      $assetList.css('display', 'block')
     })
   }
 
@@ -386,6 +385,8 @@ $(document).ready(function () {
     updateFilteredList(arrayFiltered)
     /*** Used on revision 1 ***/
     createAssetTables(arrayFiltered)
+
+    collectGraphData(arrayFiltered)
   }
 
   $resultsListWrapper.on('click', '.addToCompare', function (event) {
@@ -435,6 +436,46 @@ $(document).ready(function () {
         return array[(array.length - 1) / 2] // array with odd number elements
       }
     }
+  }
+
+  function collectGraphData (filteredList) {
+    const getSession = window.sessionStorage.getItem('app')
+    const session = JSON.parse(getSession)
+    const { selectedAssetProjects } = session
+    const projects = filteredList || selectedAssetProjects
+    const graphData = []
+
+    projects.forEach(asset => {
+      const { length, width, outturnCost, projectName } = asset
+
+      const costFormatted = parseInt(parseFloat(outturnCost).toFixed(0))
+      const assetCost = costFormatted
+      const costPer = parseInt(toSqMetre(length, width, costFormatted, true).toFixed(0))
+
+      graphData.push([costPer, assetCost, `<a class="asset-details" data-title="${projectName}" href='benchmarking-asset-detail'>${projectName}</a>`])
+
+      session.graphData = graphData
+      window.sessionStorage.setItem('app', JSON.stringify(session))
+
+      if (filteredList) {
+        const data = new google.visualization.DataTable()
+
+        data.addColumn('number', 'Cost Per m2')
+        data.addColumn('number', 'Total asset')
+        data.addColumn({ type: 'string', role: 'tooltip' })
+        data.addRows(graphData)
+
+        const options = {
+          title: 'Total asset cost (million)',
+          hAxis: { format: 'short', title: 'Cost per m2' },
+          vAxis: { format: 'short', title: 'Total asset cost (million)', ticks: [0, 1000000, 2000000, 3000000, 4000000] },
+          legend: 'none'
+        }
+
+        const chart = new google.visualization.ScatterChart(document.getElementById('chart_div'))
+        chart.draw(data, options)
+      }
+    })
   }
 
   function setAverage () {
@@ -575,6 +616,7 @@ $(document).ready(function () {
   setAverage()
   getFilterOpts()
   setActiveInputs()
+  collectGraphData()
 
   //getCheckboxOpts()
   //getProjectData()

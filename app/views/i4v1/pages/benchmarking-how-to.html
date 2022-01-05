@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+GOV.UK Prototype Kit
+{% endblock %}
+
+{% block beforeContent %}
+{{ govukBackLink({
+text: "Back",
+href: "benchmarking-asset"
+}) }}
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-form-group">
+            <form action="benchmarking-results">
+                <fieldset class="govuk-fieldset" >
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h1 class="govuk-fieldset__heading">
+                            How do you want to use the service?
+                        </h1>
+                    </legend>
+                    <div class="govuk-radios" data-module="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="existing-project" name="existing-project" type="radio" value="existing" checked>
+                            <label class="govuk-label govuk-radios__label" for="existing-project">
+                                by finding and comparing existing project data only
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="estimate-and-comparing" name="estimate-and-comparing" type="radio" value="comparing">
+                            <label class="govuk-label govuk-radios__label" for="estimate-and-comparing">
+                                by adding my project estimate and comparing it to other project data
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+                <button class="govuk-button" style="margin-top: 30px" data-module="govuk-button">
+                    Continue
+                </button>
+            </form>
+            <p>Can’t find what you’re looking for? <a href="#">Contact us</a></p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
