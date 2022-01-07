@@ -369,8 +369,20 @@
     }
 }
 
+.graph-caption {
+    margin-left: 20px;
+    margin-top: 30px;
+    margin-bottom: 0;
+}
+
 .graph-wrapper {
-    margin-bottom: 40px;
+    //margin-bottom: 40px;
+
+    .graph-caption {
+        margin-left: 20px;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
 
     .govuk-tabs {
         margin-bottom: 0;
@@ -382,7 +394,7 @@
         // border: 1px solid #B1B4B6;
         padding: 20px;
         //margin: 30px 0;
-        border-top: 1px solid #B1B4B6;
+        //border-top: 1px solid #B1B4B6;
 
         p {
             color: #fff;
@@ -399,8 +411,8 @@
     }
 
     .graph {
-        margin-top: 40px;
-        margin-bottom: 30px;
+        //margin-top: 40px;
+        //margin-bottom: 30px;
         
         
         #chart_div {
@@ -408,16 +420,13 @@
         }
 
         .image-wrapper {
-            border: 1px solid #B1B4B6;
+            //border: 1px solid #B1B4B6;
+            overflow: hidden;
         }
     }
 }
 
-.graph-caption {
-    margin-left: 20px;
-    margin-top: 30px;
-    margin-bottom: 0;
-}
+
 
 .project-count-wrapper {
     margin: 30px 0 40px;

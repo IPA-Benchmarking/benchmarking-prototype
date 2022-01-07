@@ -38,8 +38,12 @@ const toCubic = (volume, cost) => {
 
 /*********  END: HELPERS ***********/
 
+
+
 $(document).ready(function () {
   window.GOVUKFrontend.initAll()
+
+
 
   // const evn = window.location.host
   const ipaConfig = {
@@ -70,6 +74,8 @@ $(document).ready(function () {
   const $resultsTitle = $('.results-title')
   const $detailPage = $('.full-detail-page')
   const $assetList = $('.asset-list')
+
+  const chart = document.getElementById('chart_div')
   //const $assetAmount = $('.asset-amount')
 
   const getAppSessionData = window.sessionStorage.getItem('app')
@@ -387,6 +393,7 @@ $(document).ready(function () {
     createAssetTables(arrayFiltered)
 
     collectGraphData(arrayFiltered)
+    setAverage(arrayFiltered)
   }
 
   $resultsListWrapper.on('click', '.addToCompare', function (event) {
@@ -458,31 +465,33 @@ $(document).ready(function () {
       window.sessionStorage.setItem('app', JSON.stringify(session))
 
       if (filteredList) {
-        const data = new google.visualization.DataTable()
-
-        data.addColumn('number', 'Cost Per m2')
-        data.addColumn('number', 'Total asset')
-        data.addColumn({ type: 'string', role: 'tooltip' })
-        data.addRows(graphData)
-
-        const options = {
-          title: 'Total asset cost (million)',
-          hAxis: { format: 'short', title: 'Cost per m2' },
-          vAxis: { format: 'short', title: 'Total asset cost (million)', ticks: [0, 1000000, 2000000, 3000000, 4000000] },
-          legend: 'none'
-        }
-
-        const chart = new google.visualization.ScatterChart(document.getElementById('chart_div'))
-        chart.draw(data, options)
+        drawChart(graphData)
+        // const data = new google.visualization.DataTable()
+        //
+        // data.addColumn('number', 'Cost Per m2')
+        // data.addColumn('number', 'Total asset')
+        // data.addColumn({ type: 'string', role: 'tooltip' })
+        // data.addRows(graphData)
+        //
+        // const options = {
+        //   title: 'Total asset cost (million)',
+        //   hAxis: { format: 'short', title: 'Cost per m2' },
+        //   vAxis: { format: 'short', title: 'Total asset cost (million)', ticks: [0, 1000000, 2000000, 3000000, 4000000] },
+        //   legend: 'none'
+        // }
+        //
+        // const chart = new google.visualization.ScatterChart(document.getElementById('chart_div'))
+        // chart.draw(data, options)
       }
     })
   }
 
-  function setAverage () {
+  function setAverage (filteredList) {
     const { selectedAssetProjects } = appDataModel
+    const data = filteredList || selectedAssetProjects
     const metreSq = []
 
-    selectedAssetProjects.forEach(asset => {
+    data.forEach(asset => {
       const { length, width, outturnCost } = asset
       const result = toSqMetre(length, width, outturnCost, true)
       metreSq.push(result)
@@ -599,6 +608,35 @@ $(document).ready(function () {
     $countWrapper.text(items.length)
   }
 
+  function drawChart (filteredGraphData) {
+    if (chart) {
+      const getSession = window.sessionStorage.getItem('app')
+      const data = new google.visualization.DataTable()
+      const graphData = filteredGraphData || JSON.parse(getSession).graphData
+
+      data.addColumn('number', 'Cost Per m2')
+      data.addColumn('number', 'Total asset')
+      data.addColumn({ type: 'string', role: 'tooltip', 'p': { 'html': true } })
+      data.addRows(graphData)
+
+      const options = {
+        pointShape: 'diamond',
+        pointSize: 10,
+        width: 628,
+        height: 360,
+        colors: ['#1D70B8'],
+        tooltip: { trigger: 'selection', isHtml: true },
+        //title: 'Total asset cost (million)',
+        hAxis: { format: 'short', title: 'Cost per m2' },
+        vAxis: { format: 'short', title: 'Total asset cost (million)', ticks: [0, 1000000, 2000000, 3000000, 4000000] },
+        legend: 'none'
+      }
+
+      const chart = new google.visualization.ScatterChart(document.getElementById('chart_div'))
+      chart.draw(data, options)
+    }
+  }
+
   /*** END: Used on revision 1 ***/
 
   /********* END: RESULT PAGE ***********/
@@ -617,6 +655,10 @@ $(document).ready(function () {
   getFilterOpts()
   setActiveInputs()
   collectGraphData()
+
+  google.charts.load('current', { 'packages': ['corechart'] })
+  google.charts.setOnLoadCallback(drawChart)
+
 
   //getCheckboxOpts()
   //getProjectData()
