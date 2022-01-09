@@ -181,6 +181,12 @@ $(document).ready(function () {
             </tr>`
   }
 
+  const noFilteredResults = (colSpan) => {
+    return `<tr class="govuk-table__row">
+                <td colspan="${colSpan}" class="govuk-table__cell">No results, please change your filter criteria</td>
+            </tr>`
+  }
+
   const average = arr => arr.reduce((a, b) => a + b, 0) / arr.length
 
   function getProjectData () {
@@ -543,11 +549,14 @@ $(document).ready(function () {
         nextText: 'Next &raquo;',
         totalNumber: filterData.length,
         callback: function (data, pagination) {
-          // console.log('pagination', pagination)
           $costTable.empty()
-          data.forEach(function (el) {
-            $costTable.append(costTableTpl(el))
-          })
+          if (data.length) {
+            data.forEach(function (el) {
+              $costTable.append(costTableTpl(el))
+            })
+          } else {
+            $costTable.append(noFilteredResults(6))
+          }
         }
       })
 
@@ -559,9 +568,13 @@ $(document).ready(function () {
         totalNumber: filterData.length,
         callback: function (data, pagination) {
           $projectScheduleTable.empty()
-          data.forEach(function (el) {
-            $projectScheduleTable.append(projectScheduleTpl(el))
-          })
+          if (data.length) {
+            data.forEach(function (el) {
+              $projectScheduleTable.append(projectScheduleTpl(el))
+            })
+          } else {
+            $projectScheduleTable.append(noFilteredResults(3))
+          }
         }
       })
     }
@@ -653,11 +666,9 @@ $(document).ready(function () {
   function selectedInputCount () {
     $('.filter-item').on('click', function () {
       const input = $(this)
-      const fieldset = input.closest('.govuk-fieldset')
-      const accordion = input.closest('.govuk-accordion__section-content')
-
-      accordion.find('.selection-count > span').text(fieldset.find('.filter-item:checked').length)
-
+      const accordionContent = input.closest('.govuk-accordion__section-content')
+      //const accordion = input.closest('.govuk-accordion__section-content')
+      accordionContent.find('.selection-count > span').text(accordionContent.find('.filter-item:checked').length)
     })
   }
 
