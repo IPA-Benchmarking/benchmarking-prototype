@@ -497,7 +497,12 @@ $(document).ready(function () {
       metreSq.push(result)
     })
 
-    $average.text(`£${parseFloat(average(metreSq)).toFixed(0)}K`)
+    if (metreSq.length) {
+      $average.text(`£${parseFloat(average(metreSq)).toFixed(0)}K`)
+    } else {
+      $average.text('0')
+    }
+
     setMean(metreSq)
     setMode(metreSq)
   }
@@ -506,7 +511,11 @@ $(document).ready(function () {
     const modeSum = median(metreSq)
     const $mode = $('.mode')
 
-    $mode.text(formatToFixed(modeSum))
+    if (metreSq.length) {
+      $mode.text(formatToFixed(modeSum))
+    } else {
+      $mode.text('0')
+    }
     return mode(modeSum)
   }
 
@@ -514,7 +523,11 @@ $(document).ready(function () {
     const medianSum = median(metreSq)
     const $median = $('.median')
 
-    $median.text(`${formatToFixed(medianSum)}`)
+    if (metreSq.length) {
+      $median.text(`${formatToFixed(medianSum)}`)
+    } else {
+      $median.text('0')
+    }
     return median(medianSum)
   }
 
@@ -637,6 +650,17 @@ $(document).ready(function () {
     }
   }
 
+  function selectedInputCount () {
+    $('.filter-item').on('click', function () {
+      const input = $(this)
+      const fieldset = input.closest('.govuk-fieldset')
+      const accordion = input.closest('.govuk-accordion__section-content')
+
+      accordion.find('.selection-count > span').text(fieldset.find('.filter-item:checked').length)
+
+    })
+  }
+
   /*** END: Used on revision 1 ***/
 
   /********* END: RESULT PAGE ***********/
@@ -655,6 +679,7 @@ $(document).ready(function () {
   getFilterOpts()
   setActiveInputs()
   collectGraphData()
+  selectedInputCount()
 
   google.charts.load('current', { 'packages': ['corechart'] })
   google.charts.setOnLoadCallback(drawChart)
