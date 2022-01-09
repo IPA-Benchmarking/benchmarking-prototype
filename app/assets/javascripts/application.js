@@ -231,12 +231,13 @@ $(document).ready(function () {
       const { selectedAsset } = appDataModel
       const assetArr = []
 
-      const countElem = elem.closest('.govuk-radios__item').find('.asset-amount')
-      countElem.text(`(${appDataModel.selectedAssetProjects.length})`)
+      //const countElem = elem.closest('.govuk-radios__item').find('.asset-amount')
+      //countElem.text(`(${appDataModel.selectedAssetProjects.length})`)
 
       selectedAsset.name = name
       selectedAsset.type = value
       assetArr.push({ [`${prop}`]: value })
+      window.sessionStorage.setItem('app', JSON.stringify(appDataModel))
 
       return assetArr
     }
@@ -244,29 +245,35 @@ $(document).ready(function () {
 
   function getAssetData (event, asset) {
     if ($assetSectionWrapper.length) {
+      const { appData } = appDataModel
+      if (appData && appData.length) {
+        const currentAsset = asset || setAssetOpts()
+        const projectTypeID = currentAsset
+        const property = projectTypeID.length ? Object.keys(...projectTypeID) : []
 
-      setTimeout(function () {
-        const { appData } = appDataModel
-        if (appData && appData.length) {
-          const currentAsset = asset || setAssetOpts()
-          const projectTypeID = currentAsset
-          const property = projectTypeID.length ? Object.keys(...projectTypeID) : []
+        console.log('event', event)
+        console.log('currentAsset', currentAsset)
 
-          const filterData = appData.filter(el => {
-            return projectTypeID.some(filter => {
-              return filter[property] === el[property]
-            })
-          }).map(obj => ({ ...obj }))
+        // const filterData = appData.filter(el => {
+        //   return projectTypeID.some(filter => {
+        //     return filter[property] === el[property]
+        //   })
+        // }).map(obj => ({ ...obj }))
 
-          console.log('filterData', new Array(filterData))
+        console.log('projectTypeID 1', Object.values(...projectTypeID).toString())
 
-          const { assetArray, selectedAssetProjects } = appDataModel
-          assetArray.push(...currentAsset)
-          appDataModel.selectedAssetProjects = filterData
-          $projectCount.html(filterData.length)
-          window.sessionStorage.setItem('app', JSON.stringify(appDataModel))
-        }
-      }, 100)
+        const filterData = appData.filter(function (el) {
+          return el[property] === Object.values(...projectTypeID).toString()
+        })
+
+        console.log('filterData 1', filterData)
+
+        const { assetArray } = appDataModel
+        assetArray.push(...currentAsset)
+        appDataModel.selectedAssetProjects = [...filterData]
+        $projectCount.html(filterData.length)
+        window.sessionStorage.setItem('app', JSON.stringify(appDataModel))
+      }
     }
   }
 
@@ -452,44 +459,30 @@ $(document).ready(function () {
   }
 
   function collectGraphData (filteredList) {
-    const getSession = window.sessionStorage.getItem('app')
-    const session = JSON.parse(getSession)
-    const { selectedAssetProjects } = session
-    const projects = filteredList || selectedAssetProjects
-    const graphData = []
+    if (chart) {
+      const getSession = window.sessionStorage.getItem('app')
+      const session = JSON.parse(getSession)
+      const { selectedAssetProjects } = session
+      const projects = filteredList || selectedAssetProjects
+      const graphData = []
 
-    projects.forEach(asset => {
-      const { length, width, outturnCost, projectName } = asset
+      projects.forEach(asset => {
+        const { length, width, outturnCost, projectName } = asset
 
-      const costFormatted = parseInt(parseFloat(outturnCost).toFixed(0))
-      const assetCost = costFormatted
-      const costPer = parseInt(toSqMetre(length, width, costFormatted, true).toFixed(0))
+        const costFormatted = parseInt(parseFloat(outturnCost).toFixed(0))
+        const assetCost = costFormatted
+        const costPer = parseInt(toSqMetre(length, width, costFormatted, true).toFixed(0))
 
-      graphData.push([costPer, assetCost, `<a class="asset-details" data-title="${projectName}" href='benchmarking-asset-detail'>${projectName}</a>`])
+        graphData.push([costPer, assetCost, `<a class="asset-details" data-title="${projectName}" href='benchmarking-asset-detail'>${projectName}</a>`])
 
-      session.graphData = graphData
-      window.sessionStorage.setItem('app', JSON.stringify(session))
+        session.graphData = graphData
+        window.sessionStorage.setItem('app', JSON.stringify(session))
 
-      if (filteredList) {
-        drawChart(graphData)
-        // const data = new google.visualization.DataTable()
-        //
-        // data.addColumn('number', 'Cost Per m2')
-        // data.addColumn('number', 'Total asset')
-        // data.addColumn({ type: 'string', role: 'tooltip' })
-        // data.addRows(graphData)
-        //
-        // const options = {
-        //   title: 'Total asset cost (million)',
-        //   hAxis: { format: 'short', title: 'Cost per m2' },
-        //   vAxis: { format: 'short', title: 'Total asset cost (million)', ticks: [0, 1000000, 2000000, 3000000, 4000000] },
-        //   legend: 'none'
-        // }
-        //
-        // const chart = new google.visualization.ScatterChart(document.getElementById('chart_div'))
-        // chart.draw(data, options)
-      }
-    })
+        if (filteredList) {
+          drawChart(graphData)
+        }
+      })
+    }
   }
 
   function setAverage (filteredList) {
