@@ -231,9 +231,6 @@ $(document).ready(function () {
       const { selectedAsset } = appDataModel
       const assetArr = []
 
-      //const countElem = elem.closest('.govuk-radios__item').find('.asset-amount')
-      //countElem.text(`(${appDataModel.selectedAssetProjects.length})`)
-
       selectedAsset.name = name
       selectedAsset.type = value
       assetArr.push({ [`${prop}`]: value })
@@ -268,11 +265,15 @@ $(document).ready(function () {
 
         console.log('filterData 1', filterData)
 
-        const { assetArray } = appDataModel
-        assetArray.push(...currentAsset)
+        // const { assetArray } = appDataModel
+        appDataModel.assetArray = currentAsset
         appDataModel.selectedAssetProjects = [...filterData]
         $projectCount.html(filterData.length)
         window.sessionStorage.setItem('app', JSON.stringify(appDataModel))
+
+        const elem = $assetSectionWrapper.find('input[name="projectTypeID"]:checked')
+        const countElem = elem.closest('.govuk-radios__item').find('.asset-amount')
+        countElem.text(`(${appDataModel.selectedAssetProjects.length})`)
       }
     }
   }
