@@ -189,54 +189,72 @@ $(document).ready(function () {
 
   const average = arr => arr.reduce((a, b) => a + b, 0) / arr.length
 
-  function getProjectData () {
-    $.get(`${ipaConfig.url}/projects`, function (data) {
-    }).done((data) => {
-      appDataModel.appData = data
-      getAssetData()
-      getAllRegions(data)
-    })
-  }
+  // function getProjectData () {
+  //   $.get(`${ipaConfig.url}/projects`, function (data) {
+  //   }).done((data) => {
+  //     appDataModel.appData = data
+  //     getAssetData()
+  //     getAllRegions(data)
+  //   })
+  // }
+
+  // function getAssetOpts () {
+  //
+  //   $.get(`${ipaConfig.url}/projectType`, function (data) {
+  //
+  //   }).done(() => {
+  //
+  //   })
+  // }
 
   /********* START: ASSET SELECTION PAGE  ***********/
 
-  function getAssetOpts () {
-    $assetList.css('display', 'none')
-    $.get(`${ipaConfig.url}/projectType`, function (data) {
-      if ($('.asset-list').length && data.length) {
-        const groupSectors = _.mapValues(_.groupBy(data, 'sector'))
-
-        Object.keys(groupSectors).forEach(function (key) {
-          const sectorArr = groupSectors[key]
-          const keyToCamelcase = _.camelCase(key)
-          //$assetSectionWrapper.append(assetGroups(key))
-          sectorArr.forEach(function (arr, i) {
-            // console.log(keyToCamelcase)
-            $('#' + keyToCamelcase).append(radiobuttonTpl(arr, i))
-          })
+  function getProjectData () {
+    if ($('.selectAssetType')) {
+      $assetList.css('display', 'none')
+      $.when(
+        $.ajax({
+          method: 'GET',
+          url: `${ipaConfig.url}/projectType`,
+          success: function (data) {
+            console.log('1 request complete')
+            getAssetOpts(data)
+          }
+        }),
+        $.ajax({
+          method: 'GET',
+          url: `${ipaConfig.url}/projects`,
+          success: function (data) {
+            console.log(' 2 request complete')
+            appDataModel.appData = data
+            getAllRegions(data)
+          }
         })
-      }
-    }).done(() => {
-      $('.ajax-loader').css('display', 'none')
-      $assetList.css('display', 'block')
-    })
+      ).then(function (projectType, projects) {
+        console.log('all complete')
+        console.log('one', projectType)
+        console.log('two', projects)
+        getAssetData()
+
+        $('.ajax-loader').css('display', 'none')
+        $assetList.css('display', 'block')
+      })
+    }
   }
 
-  function setAssetOpts () {
-    if ($assetSectionWrapper.length) {
-      const elem = $assetSectionWrapper.find('input[name="projectTypeID"]:checked')
-      const value = elem.val()
-      const prop = elem.attr('name')
-      const name = elem.data('asset-name')
-      const { selectedAsset } = appDataModel
-      const assetArr = []
+  function getAssetOpts (data) {
+    if ($assetList.length && data.length) {
+      const groupSectors = _.mapValues(_.groupBy(data, 'sector'))
 
-      selectedAsset.name = name
-      selectedAsset.type = value
-      assetArr.push({ [`${prop}`]: value })
-      window.sessionStorage.setItem('app', JSON.stringify(appDataModel))
-
-      return assetArr
+      Object.keys(groupSectors).forEach(function (key) {
+        const sectorArr = groupSectors[key]
+        const keyToCamelcase = _.camelCase(key)
+        //$assetSectionWrapper.append(assetGroups(key))
+        sectorArr.forEach(function (arr, i) {
+          // console.log(keyToCamelcase)
+          $('#' + keyToCamelcase).append(radiobuttonTpl(arr, i))
+        })
+      })
     }
   }
 
@@ -257,7 +275,7 @@ $(document).ready(function () {
         //   })
         // }).map(obj => ({ ...obj }))
 
-        console.log('projectTypeID 1', Object.values(...projectTypeID).toString())
+        console.log('projectTypeID', Object.values(...projectTypeID).toString())
 
         const filterData = appData.filter(function (el) {
           return el[property] === Object.values(...projectTypeID).toString()
@@ -270,11 +288,28 @@ $(document).ready(function () {
         appDataModel.selectedAssetProjects = [...filterData]
         $projectCount.html(filterData.length)
         window.sessionStorage.setItem('app', JSON.stringify(appDataModel))
-
-        const elem = $assetSectionWrapper.find('input[name="projectTypeID"]:checked')
-        const countElem = elem.closest('.govuk-radios__item').find('.asset-amount')
-        countElem.text(`(${appDataModel.selectedAssetProjects.length})`)
       }
+    }
+  }
+
+  function setAssetOpts () {
+    if ($assetSectionWrapper.length) {
+      const elem = $assetSectionWrapper.find('input[name="projectTypeID"]:checked')
+      const value = elem.val()
+      const prop = elem.attr('name')
+      const name = elem.data('asset-name')
+      const { selectedAsset } = appDataModel
+      const assetArr = []
+      const countElem = elem.closest('.govuk-radios__item').find('.asset-amount')
+
+      countElem.text(`(${appDataModel.selectedAssetProjects.length})`)
+
+      selectedAsset.name = name
+      selectedAsset.type = value
+      assetArr.push({ [`${prop}`]: value })
+      window.sessionStorage.setItem('app', JSON.stringify(appDataModel))
+
+      return assetArr
     }
   }
 
@@ -671,7 +706,7 @@ $(document).ready(function () {
   /********* END: RESULT PAGE ***********/
 
   /**** Asset page ****/
-  getAssetOpts()
+  // getAssetOpts()
   getProjectData()
   assetInputs()
 
