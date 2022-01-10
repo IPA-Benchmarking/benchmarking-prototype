@@ -210,7 +210,8 @@ $(document).ready(function () {
   /********* START: ASSET SELECTION PAGE  ***********/
 
   function getProjectData () {
-    if ($('.selectAssetType')) {
+    const $selectAssetType = $('#selectAssetType')
+    if ($selectAssetType.length) {
       $assetList.css('display', 'none')
       $.when(
         $.ajax({
@@ -238,6 +239,11 @@ $(document).ready(function () {
 
         $('.ajax-loader').css('display', 'none')
         $assetList.css('display', 'block')
+
+        const elem = $assetSectionWrapper.find('input[name="projectTypeID"]:checked')
+        const countElem = elem.closest('.govuk-radios__item').find('.asset-amount')
+
+        countElem.text(`(${appDataModel.selectedAssetProjects.length})`)
       })
     }
   }
@@ -300,9 +306,6 @@ $(document).ready(function () {
       const name = elem.data('asset-name')
       const { selectedAsset } = appDataModel
       const assetArr = []
-      const countElem = elem.closest('.govuk-radios__item').find('.asset-amount')
-
-      countElem.text(`(${appDataModel.selectedAssetProjects.length})`)
 
       selectedAsset.name = name
       selectedAsset.type = value

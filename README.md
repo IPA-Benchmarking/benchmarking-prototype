@@ -1,2 +1,2 @@
-# gov-ipa-benchmarking-prototype
+# Benchmarking Prototype
 IPA Benchmarking Prototype
