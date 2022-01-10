@@ -218,7 +218,6 @@ $(document).ready(function () {
           method: 'GET',
           url: `${ipaConfig.url}/projectType`,
           success: function (data) {
-            console.log('1 request complete')
             getAssetOpts(data)
           }
         }),
@@ -226,15 +225,11 @@ $(document).ready(function () {
           method: 'GET',
           url: `${ipaConfig.url}/projects`,
           success: function (data) {
-            console.log(' 2 request complete')
             appDataModel.appData = data
             getAllRegions(data)
           }
         })
       ).then(function (projectType, projects) {
-        console.log('all complete')
-        console.log('one', projectType)
-        console.log('two', projects)
         getAssetData()
 
         $('.ajax-loader').css('display', 'none')
@@ -272,8 +267,8 @@ $(document).ready(function () {
         const projectTypeID = currentAsset
         const property = projectTypeID.length ? Object.keys(...projectTypeID) : []
 
-        console.log('event', event)
-        console.log('currentAsset', currentAsset)
+        // console.log('event', event)
+        // console.log('currentAsset', currentAsset)
 
         // const filterData = appData.filter(el => {
         //   return projectTypeID.some(filter => {
@@ -281,13 +276,13 @@ $(document).ready(function () {
         //   })
         // }).map(obj => ({ ...obj }))
 
-        console.log('projectTypeID', Object.values(...projectTypeID).toString())
+        // console.log('projectTypeID', Object.values(...projectTypeID).toString())
 
         const filterData = appData.filter(function (el) {
           return el[property] === Object.values(...projectTypeID).toString()
         })
 
-        console.log('filterData 1', filterData)
+        console.log('filterData', filterData)
 
         // const { assetArray } = appDataModel
         appDataModel.assetArray = currentAsset
