@@ -7,7 +7,7 @@ GOV.UK Prototype Kit
 {% block beforeContent %}
 {{ govukBackLink({
 text: "Back",
-href: "benchmarking-asset"
+href: "benchmarking-how-to"
 }) }}
 {% endblock %}
 
@@ -107,38 +107,20 @@ href: "benchmarking-asset"
 
             <div class="graph-wrapper">
                 <div class="graph">
-                    <div class="image-wrapper">
-                        <p class="graph-caption govuk-!-font-size-24">Project durations and cost per week</p>
-                        <image src="../../../public/images/graph.png" alt="Bar chart showing project duration and cost per week" />
-                    </div>
+                    {% include "includes/tabs-results-page-schedule.html" %}
                 </div>
                 <div class="graph-details">
-                    <div class="figures">
-                        <div class="figures-data">
-                            <p class="bold-figures">19 weeks</p>
-                            <p>Ave. project durantion</p>
-                        </div>
-                        <div class="figures-data">
-                            <p class="bold-figures">15 weeks</p>
-                            <p>Ave. construction duration</p>
-                        </div>
-                        <div class="figures-data">
-                            <p class="bold-figures">£23k</p>
-                            <p>Ave. cost per week</p>
-                        </div>
-                    </div>
-                    <p>This graph shows the construction duration for embankment assets. </p>
+                    <p>This graph shows the construction duration for embankment assets.</p>
+
                     <details class="govuk-details" data-module="govuk-details">
                         <summary class="govuk-details__summary">
-                            <span class="govuk-details__summary-text">
-                                What’s included and excluded
-                            </span>
+                    <span class="govuk-details__summary-text">
+                      What’s included and excluded
+                    </span>
                         </summary>
                         <div class="govuk-details__text"></div>
                     </details>
                 </div>
-
-            <div class="graph-wrapper">
                 {% include "includes/filter-order-by-schedule.html" %}
                 <div class="ipa-data-table project-schedule-data-table">
                     <table class="govuk-table">
@@ -155,8 +137,61 @@ href: "benchmarking-asset"
                         </tbody>
                     </table>
                 </div>
-            </div>
-            <hr class="govuk-section-break govuk-section-break--visible" style="margin: 20px 0 30px;">
+
+
+
+<!--                <div class="graph">-->
+<!--                    <div class="image-wrapper">-->
+<!--                        <p class="graph-caption govuk-!-font-size-24">Project durations and cost per week</p>-->
+<!--                        <image src="../../../public/images/graph.png" alt="Bar chart showing project duration and cost per week" />-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="graph-details">-->
+<!--                    <div class="figures">-->
+<!--                        <div class="figures-data">-->
+<!--                            <p class="bold-figures">19 weeks</p>-->
+<!--                            <p>Ave. project durantion</p>-->
+<!--                        </div>-->
+<!--                        <div class="figures-data">-->
+<!--                            <p class="bold-figures">15 weeks</p>-->
+<!--                            <p>Ave. construction duration</p>-->
+<!--                        </div>-->
+<!--                        <div class="figures-data">-->
+<!--                            <p class="bold-figures">£23k</p>-->
+<!--                            <p>Ave. cost per week</p>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <p>This graph shows the construction duration for embankment assets. </p>-->
+<!--                    <details class="govuk-details" data-module="govuk-details">-->
+<!--                        <summary class="govuk-details__summary">-->
+<!--                            <span class="govuk-details__summary-text">-->
+<!--                                What’s included and excluded-->
+<!--                            </span>-->
+<!--                        </summary>-->
+<!--                        <div class="govuk-details__text"></div>-->
+<!--                    </details>-->
+<!--                </div>-->
+
+<!--            <div class="graph-wrapper">-->
+<!--                {% include "includes/filter-order-by-schedule.html" %}-->
+<!--                <div class="ipa-data-table project-schedule-data-table">-->
+<!--                    <table class="govuk-table">-->
+<!--                        <caption class="govuk-table__caption govuk-table__caption&#45;&#45;m govuk-visually-hidden">Cost data</caption>-->
+<!--                        <thead class="govuk-table__head">-->
+<!--                        <tr class="govuk-table__row">-->
+<!--                            <th scope="col" class="govuk-table__header app-custom-class">Asset</th>-->
+<!--                            <th scope="col" class="govuk-table__header app-custom-class">Project duration</th>-->
+<!--                            <th scope="col" class="govuk-table__header app-custom-class">Construction duration</th>-->
+<!--                        </tr>-->
+<!--                        </thead>-->
+<!--                        <tbody class="govuk-table__body project-schedule">-->
+
+<!--                        </tbody>-->
+<!--                    </table>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <hr class="govuk-section-break govuk-section-break&#45;&#45;visible" style="margin: 20px 0 30px;">-->
+                <hr class="govuk-section-break govuk-section-break&#45;&#45;visible" style="margin: 20px 0 30px;">
         </div>
     </div>
 </div>
