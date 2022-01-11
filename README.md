@@ -16,10 +16,10 @@ node.js - version 16.x.x
 
 Install dependencies
 
-`npm install`
+```npm install```
 
 Run the kit
 
-`npm start`
+```npm start```
 
 Go to localhost:3001 in your browser.
