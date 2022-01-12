@@ -53,9 +53,9 @@ $(document).ready(function () {
   // const projectsDataModel = []
   let paramArr = []
   let itemsToCompare = []
-  const selectedOpts = []
-  //const selectedCategoriesArr = []
-  let selectedFilterOptions = []
+  // const selectedOpts = []
+  // const selectedCategoriesArr = []
+  // let selectedFilterOptions = []
 
   const $resultsListWrapper = $('.results-list')
   const $resultPageWrapper = $('.results-page')
@@ -83,7 +83,7 @@ $(document).ready(function () {
 
   console.log('ON LOAD ----- appSession', appSession)
 
-  const { selectedAsset, assetArray, appData, selectedAssetProjects } = appSession || {}
+  const { selectedAsset, assetArray, appData, selectedAssetProjects, regionList } = appSession || {}
 
   const appDataModel = {
     selectedAsset: {
@@ -96,7 +96,8 @@ $(document).ready(function () {
     compareList: [],
     filterOpts: [],
     // category: [],
-    options: []
+    options: [],
+    regionList: !_.isNull(appSession) && regionList ? regionList : []
   }
 
   const radiobuttonTpl = (items) => {
@@ -321,12 +322,8 @@ $(document).ready(function () {
       const { selectedAsset } = appDataModel
       const countElem = input.closest('.govuk-radios__item').find('.asset-amount')
 
-      console.log(input)
-
       selectedAsset.name = value
       selectedAsset.type = name
-
-      // console.log('yes...')
 
       selectedAssetArr.push({ [`${prop}`]: value })
       getAssetData(event, selectedAssetArr)
@@ -348,37 +345,62 @@ $(document).ready(function () {
   }
 
   function getAllRegions (data) {
-    if ($regionListWrapper.length) {
-      const groupRegions = _.mapValues(_.groupBy(data, 'assetRegion'))
-      const regionList = Object.keys(groupRegions).sort()
-      const property = 'assetRegion'
+    const groupRegions = _.mapValues(_.groupBy(data, 'assetRegion'))
+    appDataModel.regionList = groupRegions
+    window.sessionStorage.setItem('app', JSON.stringify(appDataModel))
+  }
 
+  function setRegionOpts () {
+    if ($regionListWrapper.length) {
+      const getSession = window.sessionStorage.getItem('app')
+      const session = JSON.parse(getSession)
+
+      const property = 'assetRegion'
+      const regionList = Object.keys(session.regionList).sort()
       regionList.unshift('All of the uk')
       regionList.map((items, index) => {
         $regionListWrapper.append(checkboxTpl(items, index, property))
       })
     }
   }
-
+  let array = []
   function updateFilterOpts (el, value, propName) {
+
+
     if (el.is(':checked')) {
       paramArr.push({ [`${propName}`]: value })
+      array = paramArr
     } else {
       paramArr = $.grep(paramArr, function (obj) {
         return obj[`${propName}`] !== value
       })
+      array = paramArr
     }
 
-    window.sessionStorage.setItem('app', JSON.stringify(appDataModel))
-    setSelectedFilterOpts(paramArr)
-    onFilter(paramArr, propName)
+    if (value === 'allOfTheUk') {
+      el.closest('.govuk-checkboxes').find('input').not(el).prop('checked', false)
+      array = paramArr.filter((item) => {
+        return Object.keys(item).toString() !== propName
+      })
+      paramArr = array
+    } else {
+      $('#allOfTheUk').prop('checked', false)
+    }
+
+    console.log('array', array)
+
+    // appSession.filterOpts = paramArr
+    // window.sessionStorage.setItem('app', JSON.stringify(appDataModel))
+    setSelectedFilterOpts(array)
+    onFilter(array, propName)
+
+    console.log('appSession.filterOpts ', appSession.filterOpts)
   }
 
   function setSelectedFilterOpts (paramArr) {
-    if (paramArr.length) {
-      appSession.filterOpts = paramArr
-      window.sessionStorage.setItem('app', JSON.stringify(appSession))
-    }
+    //if (paramArr.length) {}
+    appSession.filterOpts = paramArr
+    window.sessionStorage.setItem('app', JSON.stringify(appSession))
   }
 
   function getFilterOpts () {
@@ -582,6 +604,7 @@ $(document).ready(function () {
               $costTable.append(costTableTpl(el))
             })
           } else {
+            // $('#chart_div').css('display', 'none')
             $costTable.append(noFilteredResults(6))
           }
         }
@@ -711,6 +734,7 @@ $(document).ready(function () {
   /**** Results page ****/
   getAssetResultsData()
   onInput()
+  setRegionOpts()
   setCountOnload()
   createAssetTables()
   setAverage()
@@ -721,7 +745,6 @@ $(document).ready(function () {
 
   google.charts.load('current', { 'packages': ['corechart'] })
   google.charts.setOnLoadCallback(drawChart)
-
 
   //getCheckboxOpts()
   //getProjectData()

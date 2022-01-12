@@ -22,4 +22,4 @@ Run the kit
 
 ```npm start```
 
-Go to localhost:3001 in your browser.
+Go to <a href="http://localhost:3001">localhost:3001</a> in your browser.
