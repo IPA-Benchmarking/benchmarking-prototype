@@ -2,6 +2,8 @@
 const fs = require('fs')
 const path = require('path')
 
+
+
 // NPM dependencies
 const bodyParser = require('body-parser')
 const dotenv = require('dotenv')
@@ -38,6 +40,9 @@ if (fs.existsSync('./app/v6/routes.js')) {
 
 const app = express()
 const documentationApp = express()
+
+const compression = require('compression')
+app.use(compression())
 
 if (useV6) {
   console.log('/app/v6/routes.js detected - using v6 compatibility mode')
