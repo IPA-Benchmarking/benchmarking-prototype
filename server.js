@@ -2,8 +2,6 @@
 const fs = require('fs')
 const path = require('path')
 
-
-
 // NPM dependencies
 const bodyParser = require('body-parser')
 const dotenv = require('dotenv')
