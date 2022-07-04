@@ -43,8 +43,6 @@ const toCubic = (volume, cost) => {
 $(document).ready(function () {
   window.GOVUKFrontend.initAll()
 
-
-
   // const evn = window.location.host
   const ipaConfig = {
     url: 'https://ipamockapi.herokuapp.com/api'
@@ -224,7 +222,7 @@ $(document).ready(function () {
         }),
         $.ajax({
           method: 'GET',
-          url: `${ipaConfig.url}/projects`,
+          url: `${ipaConfig.url}/projects_alpha`,
           success: function (data) {
             appDataModel.appData = data
             getAllRegions(data)
@@ -363,10 +361,8 @@ $(document).ready(function () {
       })
     }
   }
-  let array = []
+  let array = [] // NM : Need to move
   function updateFilterOpts (el, value, propName) {
-
-
     if (el.is(':checked')) {
       paramArr.push({ [`${propName}`]: value })
       array = paramArr
@@ -454,7 +450,6 @@ $(document).ready(function () {
         return filter[property] === el[property]
       })
     })
-
 
     $countWrapper.html(arrayFiltered.length)
     updateFilteredList(arrayFiltered)
